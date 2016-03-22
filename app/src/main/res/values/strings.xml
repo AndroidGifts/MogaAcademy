@@ -7,4 +7,8 @@
     <string name="title_activity_sign_up">إنشاء حساب</string>
     <string name="credentials">البريد الإلكترونى / الموبايل</string>
     <string name="password_text">كلمة المرور</string>
+    <string name="name_text">الإسم</string>
+    <string name="mail_text">البريد الإلكترونى</string>
+    <string name="mobile_text">الموبايل</string>
+    <string name="password_confirmation_text">تأكيد كلمة المرور</string>
 </resources>

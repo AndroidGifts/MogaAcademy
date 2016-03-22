@@ -8,6 +8,5 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
-        <item name="android:buttonStyle">@style/AppTheme.Widget.Button</item>
     </style>
 </resources>
