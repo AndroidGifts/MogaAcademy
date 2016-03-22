@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">أكاديمية موجه</string>
+    <string name="action_settings">الإعدادات</string>
+    <string name="login_text">تسجيل الدخول</string>
+    <string name="sign_up_text">إنشاء حساب</string>
+    <string name="title_activity_login">تسجيل الدخول</string>
+    <string name="title_activity_sign_up">إنشاء حساب</string>
+    <string name="credentials">البريد الإلكترونى / الموبايل</string>
+    <string name="password_text">كلمة المرور</string>
+</resources>
