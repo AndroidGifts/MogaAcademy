@@ -48,8 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
                         .build()
         );
 
-        userPassword.setGravity(Gravity.END);
-        userPasswordConfirm.setGravity(Gravity.END);
+        userPassword.setGravity(Gravity.RIGHT);
+        userPasswordConfirm.setGravity(Gravity.RIGHT);
     }
 
     @Override

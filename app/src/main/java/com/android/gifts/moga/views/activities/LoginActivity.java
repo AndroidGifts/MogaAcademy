@@ -1,6 +1,7 @@
 package com.android.gifts.moga.views.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,12 +47,12 @@ public class LoginActivity extends AppCompatActivity {
                         .build()
         );
 
-        password.setGravity(Gravity.END);
+        password.setGravity(Gravity.RIGHT);
     }
 
     @OnClick(R.id.login_btn)
     public void loginUser() {
-
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 
     @Override
