@@ -1,7 +1,10 @@
 package com.android.gifts.moga.interactor.login;
 
-/**
- * Created by Mohamed Fareed on 3/23/2016.
- */
+
+import com.android.gifts.moga.presenter.login.OnFinishedLoginListener;
+
 public interface LoginInteractor {
+    void loginUser(String login, String password, OnFinishedLoginListener listener);
+
+    boolean isUserLoggedIn();
 }

@@ -1,7 +1,7 @@
 package com.android.gifts.moga.interactor.signUp;
 
-/**
- * Created by Mohamed Fareed on 3/23/2016.
- */
+import com.android.gifts.moga.presenter.signUp.OnFinishedRegisterListener;
+
 public interface SignUpInteractor {
+    void register(String name, String mail, String mobile, String password, int year, OnFinishedRegisterListener listener);
 }

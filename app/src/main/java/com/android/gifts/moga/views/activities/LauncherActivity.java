@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.android.gifts.moga.R;
 import com.android.gifts.moga.helpers.Constants;
+import com.android.gifts.moga.presenter.login.LoginPresenter;
+import com.android.gifts.moga.presenter.login.LoginPresenterImp;
 import com.android.gifts.moga.views.BaseView;
 
 import butterknife.Bind;
@@ -20,14 +22,27 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LauncherActivity extends AppCompatActivity {
+    public static LauncherActivity instance = null;
+    LoginPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
+
         setContentView(R.layout.activity_launcher);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
+
+        presenter = new LoginPresenterImp(this, null);
+        // Check if patient has not logged in, go to login activity
+        if (presenter.isUserHere()) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath(Constants.REGULAR_FONT)

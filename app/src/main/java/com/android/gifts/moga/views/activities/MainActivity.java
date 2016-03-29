@@ -19,7 +19,12 @@ import android.widget.TextView;
 
 import com.android.gifts.moga.R;
 import com.android.gifts.moga.helpers.Constants;
-import com.android.gifts.moga.views.adapters.NewsFragmentAdapter;
+import com.android.gifts.moga.model.News;
+import com.android.gifts.moga.views.adapters.ThreeTypesNewsFragmentAdapter;
+import com.android.gifts.moga.views.adapters.TwoTypesNewsFragmentAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -31,7 +36,11 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private ViewPager viewPager;
-    private NewsFragmentAdapter fragmentAdapter;
+    private TwoTypesNewsFragmentAdapter fragmentAdapter;
+
+    List<News> type1 = new ArrayList<>();
+    List<News> type2 = new ArrayList<>();
+    List<News> type3 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,14 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ButterKnife.bind(this);
+
+        // Kill the launcher activity, we no longer need it.
+        if (LauncherActivity.instance != null) {
+            try {
+                LauncherActivity.instance.finish();
+            } catch (Exception e) { }
+        }
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath(Constants.REGULAR_FONT)
                         .setFontAttrId(R.attr.fontPath)
@@ -50,17 +67,41 @@ public class MainActivity extends AppCompatActivity
 
         setUpNavigation();
 
+        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+
+        type2.add(new News(1, "اد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائهنصائح قبل الإمتحان.", "4/2/2016"));
+        type2.add(new News(1, "تصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد توى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type2.add(new News(1, "حلود الثالث", "يمكنك الإن تنزيل شيتالعديد من النصائح قبل الإمتحان.", "4/2/2016"));
+
+        type3.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type3.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        type3.add(new News(1, "اد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائهنصائح قبل الإمتحان.", "4/2/2016"));
+        type3.add(new News(1, "تصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد توى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+
+
+        List<News> news = new ArrayList<>();
+        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+
+        List<News> news2 = new ArrayList<>();
+        news2.add(new News(1, "اد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائهنصائح قبل الإمتحان.", "4/2/2016"));
+        news2.add(new News(1, "تصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد توى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        news2.add(new News(1, "حلود الثالث", "يمكنك الإن تنزيل شيتالعديد من النصائح قبل الإمتحان.", "4/2/2016"));
+
+
+        //setUpTwoTabs(news, news2);
+
         // 1. Setup Tabs
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
-        tabLayout.addTab(tabLayout.newTab().setText("إنتظام"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        changeTabsFont();
-
         // 2. Setup ViewPager and Fragment Adapter
         viewPager = (ViewPager) findViewById(R.id.pager);
-        fragmentAdapter = new NewsFragmentAdapter(getSupportFragmentManager(), 2);
-        viewPager.setAdapter(fragmentAdapter);
 
         // 3. Monitor Tab Changes
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -97,6 +138,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        setUpTwoTabs(news, news2);
     }
 
     private void setUpNavigation() {
@@ -123,14 +166,28 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setUpTabs() {
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        if (tabLayout != null) {
-            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-            tabLayout.addTab(tabLayout.newTab().setText("إنتظام"));
-            //tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
-            changeTabsFont();
-        }
+    private void setUpTwoTabs(List<News> entesabNews, List<News> entezamNews) {
+        tabLayout.removeAllTabs();
+
+        tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
+        tabLayout.addTab(tabLayout.newTab().setText("إنتظام"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        changeTabsFont();
+
+        viewPager.setAdapter(new TwoTypesNewsFragmentAdapter(getSupportFragmentManager(), entesabNews, entezamNews));
+    }
+
+    private void setUpThreeTabs(List<News> khargyaNews, List<News> edaraNews, List<News> mohasbaNews) {
+        tabLayout.removeAllTabs();
+
+        tabLayout.addTab(tabLayout.newTab().setText("خارجية"));
+        tabLayout.addTab(tabLayout.newTab().setText("إدارة"));
+        tabLayout.addTab(tabLayout.newTab().setText("محاسبة"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        changeTabsFont();
+
+        viewPager.setAdapter(new ThreeTypesNewsFragmentAdapter(getSupportFragmentManager(),
+                khargyaNews, edaraNews, mohasbaNews));
     }
 
     @Override
@@ -150,7 +207,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
-            // Handle the camera action
+            setUpThreeTabs(type1, type2, type3);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

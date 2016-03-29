@@ -9,10 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.gifts.moga.R;
+import com.android.gifts.moga.helpers.Constants;
 import com.android.gifts.moga.model.News;
 import com.android.gifts.moga.views.adapters.NewsRecyclerViewAdapter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class NewsFragment extends Fragment {
@@ -23,26 +28,33 @@ public class NewsFragment extends Fragment {
     private List<News> news;
 
     public NewsFragment() {
-        // Required empty public constructor
-
-        news = new ArrayList<>();
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-
 
     }
 
+    public static NewsFragment newInstance(List<News> news) {
+        NewsFragment fragment = new NewsFragment();
 
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+
+        String newsAsString = gson.toJson(news);
+        args.putString(Constants.FRAGMENT_NEWS_LIST_KEY, newsAsString);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+
+        // Preparing the Data
+        String newsAsString = getArguments().getString(Constants.FRAGMENT_NEWS_LIST_KEY);
+        Gson gson = new Gson();
+        Type collectionType = new TypeToken<Collection<News>>(){}.getType();
+        Collection<News> newsList = gson.fromJson(newsAsString, collectionType);
+        news = (List<News>) newsList;
 
         // Instantiate RecyclerView
         recyclerView = (RecyclerView) rootView.findViewById(R.id.news_recyclerview);
