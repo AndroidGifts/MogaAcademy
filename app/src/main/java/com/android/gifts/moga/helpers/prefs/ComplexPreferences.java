@@ -1,4 +1,4 @@
-package com.android.gifts.moga.prefs;
+package com.android.gifts.moga.helpers.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;

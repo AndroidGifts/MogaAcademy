@@ -2,23 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
-            android:title="إنتظام" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+        <item android:id="@+id/first_year" android:icon="@android:drawable/ic_menu_camera"
+            android:title="الفرقة الأولى" />
+        <item android:id="@+id/second_year" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="الفرقة الثانية" />
+        <item android:id="@+id/third_year" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="الفرقة الثالثة" />
+        <item android:id="@+id/fourth_year" android:icon="@android:drawable/ic_menu_manage"
+            android:title="الفرقة الرابعة" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
 
 </menu>

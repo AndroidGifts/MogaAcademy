@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.android.gifts.moga.model.News;
+import com.android.gifts.moga.API.model.News;
 import com.android.gifts.moga.views.fragments.NewsFragment;
 
 import java.util.List;

@@ -7,8 +7,8 @@ import com.android.gifts.moga.API.RestClient;
 import com.android.gifts.moga.API.model.LoginRegisterResponse;
 import com.android.gifts.moga.API.model.UserVm;
 import com.android.gifts.moga.helpers.Constants;
-import com.android.gifts.moga.prefs.ComplexPreferences;
-import com.android.gifts.moga.prefs.ObjectPreference;
+import com.android.gifts.moga.helpers.prefs.ComplexPreferences;
+import com.android.gifts.moga.helpers.prefs.ObjectPreference;
 import com.android.gifts.moga.presenter.login.OnFinishedLoginListener;
 
 import retrofit2.Call;
@@ -33,8 +33,8 @@ public class LoginInteractorImp implements LoginInteractor {
         call.enqueue(new Callback<LoginRegisterResponse>() {
             @Override
             public void onResponse(Call<LoginRegisterResponse> call, Response<LoginRegisterResponse> response) {
-                LoginRegisterResponse loginRegisterResponse = response.body();
                 if (response.isSuccess()) {
+                    LoginRegisterResponse loginRegisterResponse = response.body();
                     if (loginRegisterResponse.getResult().getCode() == 0) {
                         // Save user to prefs
                         complexPreferences.putObject(Constants.USER_PREF_KEY, loginRegisterResponse.getUserVm());

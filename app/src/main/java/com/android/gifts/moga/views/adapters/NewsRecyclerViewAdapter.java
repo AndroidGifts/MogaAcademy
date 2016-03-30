@@ -1,22 +1,19 @@
 package com.android.gifts.moga.views.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.gifts.moga.API.model.News;
 import com.android.gifts.moga.R;
-import com.android.gifts.moga.model.News;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-/**
- * Created by Mohamed Fareed on 3/27/2016.
- */
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.NewsViewHolder> {
     private List<News> news = new ArrayList<>();
 
@@ -37,8 +34,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         News currentNews = news.get(position);
 
         holder.title.setText(currentNews.getTitle());
-        holder.content.setText(currentNews.getContent());
-        holder.date.setText(currentNews.getDate());
+        holder.content.setText(currentNews.getSubject());
+        holder.date.setText(currentNews.getCreatedAt().substring(0, 9));
     }
 
     @Override

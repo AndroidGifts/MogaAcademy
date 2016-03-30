@@ -17,13 +17,16 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.gifts.moga.API.model.News;
 import com.android.gifts.moga.R;
 import com.android.gifts.moga.helpers.Constants;
-import com.android.gifts.moga.model.News;
-import com.android.gifts.moga.views.adapters.ThreeTypesNewsFragmentAdapter;
+import com.android.gifts.moga.helpers.UIHelper;
+import com.android.gifts.moga.presenter.news.NewsPresenter;
+import com.android.gifts.moga.presenter.news.NewsPresenterImp;
 import com.android.gifts.moga.views.adapters.TwoTypesNewsFragmentAdapter;
+import com.android.gifts.moga.views.adapters.ThreeTypesNewsFragmentAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -31,16 +34,21 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MainView {
     private DrawerLayout drawer;
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private ViewPager viewPager;
-    private TwoTypesNewsFragmentAdapter fragmentAdapter;
+    private NavigationView navigationView;
 
-    List<News> type1 = new ArrayList<>();
-    List<News> type2 = new ArrayList<>();
-    List<News> type3 = new ArrayList<>();
+    private MaterialDialog progressDialog;
+
+    private NewsPresenter presenter;
+
+    private long userYear;
+    long selectedItem;
+
+    private TwoTypesNewsFragmentAdapter fragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,12 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ButterKnife.bind(this);
+        UIHelper uiHelper = new UIHelper(this);
+        progressDialog = uiHelper.getSpinnerProgressDialog("جارى تحميل الأخبار");
+
+        presenter = new NewsPresenterImp(this, this);
+        userYear = presenter.getUserYear();
+        selectedItem = userYear;
 
         // Kill the launcher activity, we no longer need it.
         if (LauncherActivity.instance != null) {
@@ -66,38 +80,64 @@ public class MainActivity extends AppCompatActivity
         );
 
         setUpNavigation();
+        setUpTabs();
 
-        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type1.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        presenter.getNews(0, 30, (int) userYear, 0);
+    }
 
-        type2.add(new News(1, "اد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائهنصائح قبل الإمتحان.", "4/2/2016"));
-        type2.add(new News(1, "تصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد توى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type2.add(new News(1, "حلود الثالث", "يمكنك الإن تنزيل شيتالعديد من النصائح قبل الإمتحان.", "4/2/2016"));
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-        type3.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type3.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        type3.add(new News(1, "اد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائهنصائح قبل الإمتحان.", "4/2/2016"));
-        type3.add(new News(1, "تصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد توى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        Log.e("FOF", "OLD selected item : " + selectedItem);
 
+        if (id == R.id.first_year) {
+            if (selectedItem != 1) {
+                // Load Year 2 News
+                Log.e("FOF", "Load 1");
+            } else {
+                drawer.closeDrawer(GravityCompat.END);
+                return true;
+            }
+            selectedItem = 1;
+        } else if (id == R.id.second_year) {
+            if (selectedItem != 2) {
+                presenter.getNews(0, 30, 2, 0);
+                Log.e("FOF", "Load 2");
+            } else {
+                drawer.closeDrawer(GravityCompat.END);
+                return true;
+            }
+            selectedItem = 2;
+        } else if (id == R.id.third_year) {
+            if (selectedItem != 3) {
+                presenter.getNews(0, 30, 3, 0);
+                Log.e("FOF", "Load 3");
+            } else {
+                drawer.closeDrawer(GravityCompat.END);
+                return true;
+            }
+            selectedItem = 3;
+        } else if (id == R.id.fourth_year) {
+            if (selectedItem != 4) {
+                // Load Year 2 News
+                Log.e("FOF", "Load 4");
+            } else {
+                drawer.closeDrawer(GravityCompat.END);
+                return true;
+            }
+            selectedItem = 4;
+        }
 
-        List<News> news = new ArrayList<>();
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news.add(new News(1, "حلول شيت الإقتصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
+        Log.e("FOF", "NEW selected item : " + selectedItem);
+        //presenter.getNews(0, 30, (int) userYear, 0);
+        drawer.closeDrawer(GravityCompat.END);
+        return true;
+    }
 
-        List<News> news2 = new ArrayList<>();
-        news2.add(new News(1, "اد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد أو شرائهنصائح قبل الإمتحان.", "4/2/2016"));
-        news2.add(new News(1, "تصاد الثالث", "يمكنك الإن تنزيل شيت الإقتصاد توى على العديد من النصائح قبل الإمتحان.", "4/2/2016"));
-        news2.add(new News(1, "حلود الثالث", "يمكنك الإن تنزيل شيتالعديد من النصائح قبل الإمتحان.", "4/2/2016"));
-
-
-        //setUpTwoTabs(news, news2);
-
+    private void setUpTabs() {
         // 1. Setup Tabs
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         // 2. Setup ViewPager and Fragment Adapter
@@ -138,8 +178,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-        setUpTwoTabs(news, news2);
     }
 
     private void setUpNavigation() {
@@ -149,8 +187,21 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Set the selected Item
+        switch ((int) userYear) {
+            case 1:
+                navigationView.setCheckedItem(R.id.first_year); break;
+            case 2:
+                navigationView.setCheckedItem(R.id.second_year); break;
+            case 3:
+                navigationView.setCheckedItem(R.id.third_year); break;
+            case 4:
+                navigationView.setCheckedItem(R.id.fourth_year); break;
+        }
 
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -166,7 +217,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setUpTwoTabs(List<News> entesabNews, List<News> entezamNews) {
+    @Override
+    public void setUpTwoTabs(List<News> entesabNews, List<News> entezamNews) {
         tabLayout.removeAllTabs();
 
         tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
@@ -174,11 +226,15 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         changeTabsFont();
 
-        viewPager.setAdapter(new TwoTypesNewsFragmentAdapter(getSupportFragmentManager(), entesabNews, entezamNews));
+        fragmentAdapter = new TwoTypesNewsFragmentAdapter(getSupportFragmentManager(), entesabNews, entezamNews);
+
+        viewPager.setAdapter(fragmentAdapter);
+
     }
 
-    private void setUpThreeTabs(List<News> khargyaNews, List<News> edaraNews, List<News> mohasbaNews) {
-        tabLayout.removeAllTabs();
+    @Override
+    public void setUpThreeTabs(List<News> khargyaNews, List<News> edaraNews, List<News> mohasbaNews) {
+        //tabLayout.removeAllTabs();
 
         tabLayout.addTab(tabLayout.newTab().setText("خارجية"));
         tabLayout.addTab(tabLayout.newTab().setText("إدارة"));
@@ -193,35 +249,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         if (drawer.isDrawerOpen(GravityCompat.END)) {
             drawer.closeDrawer(GravityCompat.END);
         } else {
             super.onBackPressed();
         }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camara) {
-            setUpThreeTabs(type1, type2, type3);
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        drawer.closeDrawer(GravityCompat.END);
-        return true;
     }
 
     private void changeTabsFont() {
@@ -244,5 +277,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(context));
+    }
+
+    @Override
+    public void showProgress() {
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideProgress() {
+        progressDialog.hide();
+    }
+
+    @Override
+    public void navigateToNextActivity() {
+
     }
 }
