@@ -44,6 +44,11 @@ public class NewsPresenterImp implements NewsPresenter, OnFinishedNewsListener {
     }
 
     @Override
+    public void clearNews() {
+        interactor.deleteNews();
+    }
+
+    @Override
     public void onSuccess(List<News> news) {
         if (mainView != null) {
             if (yearID <= 2) {
@@ -60,7 +65,7 @@ public class NewsPresenterImp implements NewsPresenter, OnFinishedNewsListener {
                     }
                 }
 
-                mainView.setUpTwoTabs(newsType2, newsType1);
+                mainView.setUpTwoTabs(yearID, newsType2, newsType1);
 
             } else {
                 // If userYear > 2, parse 3 lists of news and setUp three tabs
@@ -79,7 +84,7 @@ public class NewsPresenterImp implements NewsPresenter, OnFinishedNewsListener {
                     }
                 }
 
-                mainView.setUpThreeTabs(newsType5, newsType4, newsType3);
+                mainView.setUpThreeTabs(yearID, newsType5, newsType4, newsType3);
             }
 
             mainView.hideProgress();

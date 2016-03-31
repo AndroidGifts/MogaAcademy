@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +27,10 @@ import com.android.gifts.moga.helpers.Constants;
 import com.android.gifts.moga.helpers.UIHelper;
 import com.android.gifts.moga.presenter.news.NewsPresenter;
 import com.android.gifts.moga.presenter.news.NewsPresenterImp;
-import com.android.gifts.moga.views.adapters.TwoTypesNewsFragmentAdapter;
-import com.android.gifts.moga.views.adapters.ThreeTypesNewsFragmentAdapter;
+import com.android.gifts.moga.views.adapters.NewsFragmentPagerAdapter;
+import com.android.gifts.moga.views.fragments.NewsFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -39,7 +43,6 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private ViewPager viewPager;
-    private NavigationView navigationView;
 
     private MaterialDialog progressDialog;
 
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     private long userYear;
     long selectedItem;
 
-    private TwoTypesNewsFragmentAdapter fragmentAdapter;
+    private NewsFragmentPagerAdapter fragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.first_year) {
             if (selectedItem != 1) {
-                // Load Year 2 News
+                presenter.getNews(0, 30, 1, 0);
                 Log.e("FOF", "Load 1");
             } else {
                 drawer.closeDrawer(GravityCompat.END);
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity
             selectedItem = 3;
         } else if (id == R.id.fourth_year) {
             if (selectedItem != 4) {
-                // Load Year 2 News
+                presenter.getNews(0, 30, 4, 0);
                 Log.e("FOF", "Load 4");
             } else {
                 drawer.closeDrawer(GravityCompat.END);
@@ -135,6 +138,117 @@ public class MainActivity extends AppCompatActivity
         //presenter.getNews(0, 30, (int) userYear, 0);
         drawer.closeDrawer(GravityCompat.END);
         return true;
+    }
+
+    List<Fragment> fragments = new ArrayList<>();
+    @Override
+    public void setUpTwoTabs(long yearId, List<News> entesabNews, List<News> entezamNews) {
+        tabLayout.removeAllTabs();
+
+        for (int i = 0; i < fragments.size(); i++) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction trans = manager.beginTransaction();
+            trans.remove(fragments.get(i));
+            trans.commit();
+            manager.popBackStack();
+        }
+        fragments = new ArrayList<>();
+
+        tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
+        tabLayout.addTab(tabLayout.newTab().setText("إنتظام"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        changeTabsFont();
+
+        fragments.add(NewsFragment.newInstance(entesabNews));
+        fragments.add(NewsFragment.newInstance(entezamNews));
+
+        Log.e("FOF", "FRAGMENT SIZE: " + fragments.size());
+
+        fragmentPagerAdapter = new NewsFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(fragmentPagerAdapter);
+        viewPager.setCurrentItem(1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.clearNews();
+    }
+
+    @Override
+    public void setUpThreeTabs(long yearId, List<News> khargyaNews, List<News> edaraNews, List<News> mohasbaNews) {
+        tabLayout.removeAllTabs();
+
+        for (int i = 0; i < fragments.size(); i++) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction trans = manager.beginTransaction();
+            trans.remove(fragments.get(i));
+            trans.commit();
+            manager.popBackStack();
+        }
+        fragments = new ArrayList<>();
+
+        tabLayout.addTab(tabLayout.newTab().setText("إدارة"));
+        tabLayout.addTab(tabLayout.newTab().setText("خارجية"));
+        tabLayout.addTab(tabLayout.newTab().setText("محاسبة"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        changeTabsFont();
+
+        fragments.add(NewsFragment.newInstance(mohasbaNews));
+        fragments.add(NewsFragment.newInstance(khargyaNews));
+        fragments.add(NewsFragment.newInstance(edaraNews));
+
+        fragmentPagerAdapter = new NewsFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(fragmentPagerAdapter);
+        viewPager.setCurrentItem(2);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
+        if (drawer.isDrawerOpen(GravityCompat.END)) {
+            drawer.closeDrawer(GravityCompat.END);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void changeTabsFont() {
+
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    Typeface font = Typeface.createFromAsset(getAssets(), Constants.BOLD_FONT);
+                    ((TextView) tabViewChild).setTypeface(font);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context context) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(context));
+    }
+
+    @Override
+    public void showProgress() {
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideProgress() {
+        progressDialog.hide();
+    }
+
+    @Override
+    public void navigateToNextActivity() {
+
     }
 
     private void setUpTabs() {
@@ -187,7 +301,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -215,82 +329,5 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-    }
-
-    @Override
-    public void setUpTwoTabs(List<News> entesabNews, List<News> entezamNews) {
-        tabLayout.removeAllTabs();
-
-        tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
-        tabLayout.addTab(tabLayout.newTab().setText("إنتظام"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        changeTabsFont();
-
-        fragmentAdapter = new TwoTypesNewsFragmentAdapter(getSupportFragmentManager(), entesabNews, entezamNews);
-
-        viewPager.setAdapter(fragmentAdapter);
-
-    }
-
-    @Override
-    public void setUpThreeTabs(List<News> khargyaNews, List<News> edaraNews, List<News> mohasbaNews) {
-        //tabLayout.removeAllTabs();
-
-        tabLayout.addTab(tabLayout.newTab().setText("خارجية"));
-        tabLayout.addTab(tabLayout.newTab().setText("إدارة"));
-        tabLayout.addTab(tabLayout.newTab().setText("محاسبة"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        changeTabsFont();
-
-        viewPager.setAdapter(new ThreeTypesNewsFragmentAdapter(getSupportFragmentManager(),
-                khargyaNews, edaraNews, mohasbaNews));
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        assert drawer != null;
-        if (drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawer(GravityCompat.END);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    private void changeTabsFont() {
-
-        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
-        int tabsCount = vg.getChildCount();
-        for (int j = 0; j < tabsCount; j++) {
-            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
-            int tabChildsCount = vgTab.getChildCount();
-            for (int i = 0; i < tabChildsCount; i++) {
-                View tabViewChild = vgTab.getChildAt(i);
-                if (tabViewChild instanceof TextView) {
-                    Typeface font = Typeface.createFromAsset(getAssets(), Constants.BOLD_FONT);
-                    ((TextView) tabViewChild).setTypeface(font);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void attachBaseContext(Context context) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(context));
-    }
-
-    @Override
-    public void showProgress() {
-        progressDialog.show();
-    }
-
-    @Override
-    public void hideProgress() {
-        progressDialog.hide();
-    }
-
-    @Override
-    public void navigateToNextActivity() {
-
     }
 }

@@ -6,4 +6,5 @@ import com.android.gifts.moga.presenter.news.OnFinishedNewsListener;
 public interface NewsInteractor {
     void getNews(int pageIndex, int pageSize, int yearId, int typeId, OnFinishedNewsListener listener);
     UserVm getUser();
+    void deleteNews();
 }
