@@ -6,5 +6,8 @@ package com.android.gifts.moga.presenter.login;
 public interface OnFinishedLoginListener {
     void onSuccess();
     void onLoginError();
+
+    void onSendNewPassSuccess();
+
     void onFail();
 }

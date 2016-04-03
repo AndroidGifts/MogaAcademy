@@ -74,6 +74,7 @@ public class SignUpPresenterImp implements SignUpPresenter, OnFinishedRegisterLi
         if (registerView != null) {
             registerView.hideProgress();
             Log.e("Moga", "REGISTER FAIL");
+            registerView.showNetworkError();
         }
     }
 }

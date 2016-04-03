@@ -9,10 +9,9 @@ public class Constants {
     public static final String PREFERENCE_NAME = "mogaPrefs";
     public static final String USER_PREF_KEY = "userPref";
 
-    public static final String NEWS1_PREF_KEY = "year1";
-    public static final String NEWS2_PREF_KEY = "year2";
-    public static final String NEWS3_PREF_KEY = "year3";
-    public static final String NEWS4_PREF_KEY = "year4";
+    public static final String NEWS_KEY = "news";
+
+    public static final String SCHEDULES = "schedules";
 
     public static final String MOBILE_PATTERN = "(^01[0-2]{1}[0-9]{8}$)|(^\u0660\u0661[\u0660-\u0662]{1}[\u0660-\u0669]{8}$)";
 

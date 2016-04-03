@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.android.gifts.moga.R;
@@ -39,6 +40,7 @@ public class LauncherActivity extends AppCompatActivity {
         presenter = new LoginPresenterImp(this, null);
         // Check if patient has not logged in, go to login activity
         if (presenter.isUserHere()) {
+            Log.e("FOF", "YEEEEEESS USER HEEEEEEEREEEEEE");
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;

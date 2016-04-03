@@ -2,6 +2,9 @@ package com.android.gifts.moga.API;
 
 import com.android.gifts.moga.API.model.LoginRegisterResponse;
 import com.android.gifts.moga.API.model.NewsResponse;
+import com.android.gifts.moga.API.model.Result;
+import com.android.gifts.moga.API.model.SchedulesResponse;
+import com.android.gifts.moga.API.model.UserVm;
 
 import java.util.HashMap;
 
@@ -22,5 +25,16 @@ public interface MogaApiInterface {
 
     @GET("/service/api/News/GetNews")
     Call<NewsResponse> getNews(@Query("pageIndex") int pageIndex, @Query("pageSize") int pageSize,
-                               @Query("yearId") int yearId);
+                               @Query("yearId") int yearId, @Query("typeId") int typeID);
+
+    @GET("/service/api/News/GetSchedules")
+    Call<SchedulesResponse> getSchedules(@Query("yearId") int yearId, @Query("typeId") int typeID);
+
+    @POST("/service/api/Users/UpdateUser")
+    @Headers({"Content-Type:application/json"})
+    Call<Result> updateUser(@Body UserVm user);
+
+    @POST("/service/api/Users/ForgetPassword")
+    @Headers({"Content-Type:application/json"})
+    Call<Result> sendNewPassword(@Query("email") String email);
 }

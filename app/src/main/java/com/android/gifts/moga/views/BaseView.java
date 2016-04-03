@@ -7,4 +7,6 @@ public interface BaseView {
     void showProgress();
     void hideProgress();
     void navigateToNextActivity();
+
+    void showNetworkError();
 }

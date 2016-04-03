@@ -3,6 +3,7 @@ package com.android.gifts.moga.views.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,8 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
     EditText userPasswordConfirm;
     @Bind(R.id.year_spinner)
     Spinner userYear;
+    @Bind(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     SignUpPresenter presenter;
     UIHelper uiHelper;
@@ -153,5 +156,10 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
     public void navigateToNextActivity() {
         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
         finish();
+    }
+
+    @Override
+    public void showNetworkError() {
+        Snackbar.make(coordinatorLayout, "تحقق من اتصال الإنترنت الخاص بك وحاول مرة أخرى", Snackbar.LENGTH_LONG).show();
     }
 }

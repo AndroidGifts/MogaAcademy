@@ -1,10 +1,10 @@
 package com.android.gifts.moga.views.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,41 +12,44 @@ import android.widget.ProgressBar;
 
 import com.android.gifts.moga.API.model.News;
 import com.android.gifts.moga.R;
-import com.android.gifts.moga.helpers.Constants;
-import com.android.gifts.moga.views.adapters.NewsRecyclerViewAdapter;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.android.gifts.moga.presenter.main.MainPresenter;
+import com.android.gifts.moga.presenter.main.MainPresenterImp;
+import com.android.gifts.moga.views.activities.ScheduleActivity;
+import com.android.gifts.moga.views.adapters.endlessRecycler.EndlessRecyclerViewNewsAdapter;
+import com.android.gifts.moga.views.adapters.endlessRecycler.OnLoadMoreListener;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements NewsFragmentView{
     private RecyclerView recyclerView;
-    private NewsRecyclerViewAdapter recyclerViewAdapter;
-    private RecyclerView.LayoutManager layoutManager;
 
+    //private NewsRecyclerViewAdapter recyclerViewAdapter;
+    private EndlessRecyclerViewNewsAdapter endlessNewsAdapter;
     private List<News> news;
+    int pageIndex = 0;
+    int yearId;
+    int typeId;
+
+    private Intent intent;
+    private View rootView;
+
+    private MainPresenter presenter;
+    @Bind(R.id.fragment_progress_bar) ProgressBar progressBar;
 
     public NewsFragment() {
 
     }
 
-    public static NewsFragment newInstance(List<News> news) {
+    public static NewsFragment newInstance(int yearId, int typeId) {
         NewsFragment fragment = new NewsFragment();
 
         Bundle args = new Bundle();
-        Gson gson = new Gson();
-
-        Log.e("FOF", "newInstance Fragment Initialized");
-        Log.e("FOF", "news newInstance Fragment: size: " + news.size() + " title: " + news.get(0).getTitle());
-
-        String newsAsString = gson.toJson(news);
-        args.putString(Constants.FRAGMENT_NEWS_LIST_KEY, newsAsString);
+        args.putInt("yearId", yearId);
+        args.putInt("typeId", typeId);
         fragment.setArguments(args);
 
         return fragment;
@@ -55,32 +58,98 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+        rootView = inflater.inflate(R.layout.fragment_news, container, false);
+        ButterKnife.bind(this, rootView);
 
-        // Preparing the Data
-        String newsAsString = getArguments().getString(Constants.FRAGMENT_NEWS_LIST_KEY);
-        Gson gson = new Gson();
-        Type collectionType = new TypeToken<Collection<News>>(){}.getType();
-        Collection<News> newsList = gson.fromJson(newsAsString, collectionType);
-        news = (List<News>) newsList;
+        yearId = getArguments().getInt("yearId");
+        typeId = getArguments().getInt("typeId");
 
-        Log.e("FOF", "onCreateView Fragment Initialized");
-        Log.e("FOF", "news Fragment: size: " + news.size() + " title: " + news.get(0).getTitle());
+        presenter = new MainPresenterImp(this, getContext());
+        presenter.getNews(pageIndex, 10, yearId, typeId);
+        presenter.getSchedules(yearId, typeId);
+
+        intent = new Intent(getActivity(), ScheduleActivity.class);
+
+        // Inflate the layout for this fragment
+        return rootView;
+    }
+
+    @OnClick(R.id.left_layout)
+    public void openLeftSchedule() {
+        intent.putExtra("title", "جدول الملازم");
+        intent.putExtra("scheduleURL", "http://pbs.twimg.com/media/Bist9mvIYAAeAyQ.jpg");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.center_layout)
+    public void openCenterSchedule() {
+        intent.putExtra("title", "مواعيد الشرح");
+        intent.putExtra("scheduleURL", "http://androidgifts.com/wp-content/uploads/2016/03/bottom_navigation_cover_2.png");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.right_layout)
+    public void openRightSchedule() {
+        intent.putExtra("title", "جدول المحاضرات و السكاشن");
+        intent.putExtra("scheduleURL", "http://androidgifts.com/wp-content/uploads/2015/08/logotrial.png");
+        startActivity(intent);
+    }
+
+    @Override
+    public void initializeRecyclerView(List<News> firstNews) {
+        news = firstNews;
 
         // Instantiate RecyclerView
         recyclerView = (RecyclerView) rootView.findViewById(R.id.news_recyclerview);
 
         // Instantiate LayoutManager
-        layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // Attach the recyclerView to that LayoutManager
         recyclerView.setLayoutManager(layoutManager);
 
-        // Instantiate Custom Adapter with the required data
-        recyclerViewAdapter = new NewsRecyclerViewAdapter(news);
-        // Attach the recyclerView to that Adapter
-        recyclerView.setAdapter(recyclerViewAdapter);
+        endlessNewsAdapter = new EndlessRecyclerViewNewsAdapter(news, recyclerView);
 
-        // Inflate the layout for this fragment
-        return rootView;
+        endlessNewsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                news.add(null);
+                endlessNewsAdapter.notifyItemInserted(news.size() - 1);
+                presenter.getNews(pageIndex + 1, 10, yearId, typeId);
+            }
+        });
+
+        recyclerView.setAdapter(endlessNewsAdapter);
+    }
+
+    @Override
+    public void updateRecyclerView(List<News> updatedNews) {
+        news.remove(news.size() - 1);
+        endlessNewsAdapter.notifyItemRemoved(news.size());
+
+        for (int i = 0; i < updatedNews.size(); i++) {
+            news.add(updatedNews.get(i));
+            endlessNewsAdapter.notifyItemInserted(news.size());
+        }
+
+        endlessNewsAdapter.setLoaded();
+        pageIndex++;
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setIndeterminate(false);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideSpinner() {
+        news.remove(news.size() - 1);
+        endlessNewsAdapter.notifyItemRemoved(news.size());
     }
 }

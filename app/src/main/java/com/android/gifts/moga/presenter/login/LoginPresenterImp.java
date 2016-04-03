@@ -42,6 +42,22 @@ public class LoginPresenterImp implements LoginPresenter, OnFinishedLoginListene
     }
 
     @Override
+    public void sendNewPass(String email) {
+        if (loginView != null) {
+            loginView.showProgress();
+        }
+        interactor.sendNewPassword(email, this);
+    }
+
+    @Override
+    public void onSendNewPassSuccess() {
+        if (loginView != null) {
+            loginView.hideProgress();
+            loginView.showSuccessMsg();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         loginView = null;
     }
@@ -66,7 +82,7 @@ public class LoginPresenterImp implements LoginPresenter, OnFinishedLoginListene
     public void onFail() {
         if (loginView != null) {
             loginView.hideProgress();
-            Log.e("Moga", "LOGIN FAIL");
+            loginView.showNetworkError();
         }
     }
 }

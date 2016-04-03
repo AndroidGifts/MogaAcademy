@@ -1,8 +1,11 @@
 package com.android.gifts.moga.views.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,18 +24,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.gifts.moga.API.model.News;
 import com.android.gifts.moga.R;
 import com.android.gifts.moga.helpers.Constants;
 import com.android.gifts.moga.helpers.UIHelper;
-import com.android.gifts.moga.presenter.news.NewsPresenter;
-import com.android.gifts.moga.presenter.news.NewsPresenterImp;
+import com.android.gifts.moga.presenter.main.MainPresenter;
+import com.android.gifts.moga.presenter.main.MainPresenterImp;
 import com.android.gifts.moga.views.adapters.NewsFragmentPagerAdapter;
 import com.android.gifts.moga.views.fragments.NewsFragment;
+import com.android.gifts.moga.views.fragments.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -46,12 +50,16 @@ public class MainActivity extends AppCompatActivity
 
     private MaterialDialog progressDialog;
 
-    private NewsPresenter presenter;
+    private MainPresenter presenter;
 
+    List<Fragment> fragments = new ArrayList<>();
     private long userYear;
     long selectedItem;
 
-    private NewsFragmentPagerAdapter fragmentPagerAdapter;
+    @Bind(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+    @Bind(R.id.toolbar_title)
+    TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         UIHelper uiHelper = new UIHelper(this);
         progressDialog = uiHelper.getSpinnerProgressDialog("جارى تحميل الأخبار");
 
-        presenter = new NewsPresenterImp(this, this);
+        presenter = new MainPresenterImp(this);
         userYear = presenter.getUserYear();
         selectedItem = userYear;
 
@@ -85,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         setUpNavigation();
         setUpTabs();
 
-        presenter.getNews(0, 30, (int) userYear, 0);
+        setUpFragments((int)userYear);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -94,12 +102,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Log.e("FOF", "OLD selected item : " + selectedItem);
-
         if (id == R.id.first_year) {
             if (selectedItem != 1) {
-                presenter.getNews(0, 30, 1, 0);
-                Log.e("FOF", "Load 1");
+                setUpFragments(1);
             } else {
                 drawer.closeDrawer(GravityCompat.END);
                 return true;
@@ -107,8 +112,7 @@ public class MainActivity extends AppCompatActivity
             selectedItem = 1;
         } else if (id == R.id.second_year) {
             if (selectedItem != 2) {
-                presenter.getNews(0, 30, 2, 0);
-                Log.e("FOF", "Load 2");
+                setUpFragments(2);
             } else {
                 drawer.closeDrawer(GravityCompat.END);
                 return true;
@@ -116,8 +120,7 @@ public class MainActivity extends AppCompatActivity
             selectedItem = 2;
         } else if (id == R.id.third_year) {
             if (selectedItem != 3) {
-                presenter.getNews(0, 30, 3, 0);
-                Log.e("FOF", "Load 3");
+                setUpFragments(3);
             } else {
                 drawer.closeDrawer(GravityCompat.END);
                 return true;
@@ -125,24 +128,44 @@ public class MainActivity extends AppCompatActivity
             selectedItem = 3;
         } else if (id == R.id.fourth_year) {
             if (selectedItem != 4) {
-                presenter.getNews(0, 30, 4, 0);
-                Log.e("FOF", "Load 4");
+                setUpFragments(4);
             } else {
                 drawer.closeDrawer(GravityCompat.END);
                 return true;
             }
             selectedItem = 4;
+        } else if (id == R.id.settings) {
+            setupSingleFragment("الإعدادات");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_activity_layout, SettingsFragment.newInstance());
+            ft.addToBackStack(null);
+            ft.commit();
+        } else if (id == R.id.contact_us) {
+
+        } else if (id == R.id.about_us) {
+
+        } else if (id == R.id.open_learning) {
+
+        } else if (id == R.id.high_studies) {
+
         }
 
-        Log.e("FOF", "NEW selected item : " + selectedItem);
-        //presenter.getNews(0, 30, (int) userYear, 0);
         drawer.closeDrawer(GravityCompat.END);
         return true;
     }
 
-    List<Fragment> fragments = new ArrayList<>();
+    private void setupSingleFragment(String toolbarTitle){
+        viewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+        this.toolbarTitle.setText(toolbarTitle);
+    }
+
     @Override
-    public void setUpTwoTabs(long yearId, List<News> entesabNews, List<News> entezamNews) {
+    public void setUpFragments(int yearId) {
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+        this.toolbarTitle.setText("أخر الأخبار");
+
         tabLayout.removeAllTabs();
 
         for (int i = 0; i < fragments.size(); i++) {
@@ -154,53 +177,28 @@ public class MainActivity extends AppCompatActivity
         }
         fragments = new ArrayList<>();
 
-        tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
-        tabLayout.addTab(tabLayout.newTab().setText("إنتظام"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        changeTabsFont();
+        if (yearId <= 2) {
+            tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));
+            tabLayout.addTab(tabLayout.newTab().setText("إنتظام"));
 
-        fragments.add(NewsFragment.newInstance(entesabNews));
-        fragments.add(NewsFragment.newInstance(entezamNews));
+            fragments.add(NewsFragment.newInstance(yearId, 2));
+            fragments.add(NewsFragment.newInstance(yearId, 1));
+        } else {
+            tabLayout.addTab(tabLayout.newTab().setText("إدارة"));
+            tabLayout.addTab(tabLayout.newTab().setText("خارجية"));
+            tabLayout.addTab(tabLayout.newTab().setText("محاسبة"));
 
-        Log.e("FOF", "FRAGMENT SIZE: " + fragments.size());
-
-        fragmentPagerAdapter = new NewsFragmentPagerAdapter(getSupportFragmentManager(), fragments);
-        viewPager.setAdapter(fragmentPagerAdapter);
-        viewPager.setCurrentItem(1);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        presenter.clearNews();
-    }
-
-    @Override
-    public void setUpThreeTabs(long yearId, List<News> khargyaNews, List<News> edaraNews, List<News> mohasbaNews) {
-        tabLayout.removeAllTabs();
-
-        for (int i = 0; i < fragments.size(); i++) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction trans = manager.beginTransaction();
-            trans.remove(fragments.get(i));
-            trans.commit();
-            manager.popBackStack();
+            fragments.add(NewsFragment.newInstance(yearId, 3));
+            fragments.add(NewsFragment.newInstance(yearId, 5));
+            fragments.add(NewsFragment.newInstance(yearId, 4));
         }
-        fragments = new ArrayList<>();
-
-        tabLayout.addTab(tabLayout.newTab().setText("إدارة"));
-        tabLayout.addTab(tabLayout.newTab().setText("خارجية"));
-        tabLayout.addTab(tabLayout.newTab().setText("محاسبة"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         changeTabsFont();
 
-        fragments.add(NewsFragment.newInstance(mohasbaNews));
-        fragments.add(NewsFragment.newInstance(khargyaNews));
-        fragments.add(NewsFragment.newInstance(edaraNews));
 
-        fragmentPagerAdapter = new NewsFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+        NewsFragmentPagerAdapter fragmentPagerAdapter = new NewsFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragmentPagerAdapter);
-        viewPager.setCurrentItem(2);
+        viewPager.setCurrentItem((yearId <= 2) ? 1 : 2);
     }
 
     @Override
@@ -210,6 +208,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.END)) {
             drawer.closeDrawer(GravityCompat.END);
         } else {
+            finish();
             super.onBackPressed();
         }
     }
@@ -251,6 +250,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void showNetworkError() {
+        Snackbar.make(coordinatorLayout, "تحقق من اتصال الإنترنت الخاص بك وحاول مرة أخرى", Snackbar.LENGTH_LONG);
+    }
+
     private void setUpTabs() {
         // 1. Setup Tabs
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -262,7 +266,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                Log.e("FOF", "Tab Position" + tab.getPosition());
             }
 
             @Override
@@ -284,7 +287,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 tabLayout.getTabAt(position).select();
-                Log.e("FOF", "Page position: " + position);
             }
 
             @Override
@@ -304,6 +306,19 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+        TextView logoutText = (TextView) header.findViewById(R.id.log_out);
+
+        logoutText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.logOutUser();
+                startActivity(new Intent(MainActivity.this, LauncherActivity.class));
+                finish();
+                return;
+            }
+        });
 
         // Set the selected Item
         switch ((int) userYear) {
@@ -329,5 +344,11 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.clearNews();
     }
 }

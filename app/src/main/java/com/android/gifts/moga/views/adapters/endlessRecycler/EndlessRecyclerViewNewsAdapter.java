@@ -27,7 +27,7 @@ public class EndlessRecyclerViewNewsAdapter extends RecyclerView.Adapter {
     private int lastVisibleItem, totalItemCount;
     // The minimum amount of items to have below your current scroll position
     // before loading more.
-    private int visibleThreshold = 2;
+    private int visibleThreshold = 1;
     private boolean loading;
     private OnLoadMoreListener loadMoreListener;
 
@@ -45,9 +45,6 @@ public class EndlessRecyclerViewNewsAdapter extends RecyclerView.Adapter {
                     // When to load more ?? when the total items < lastVisibleID + threshold
                     totalItemCount = linearLayoutManager.getItemCount();
                     lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-
-                    Log.e("FOF", "Total Items: " + totalItemCount);
-                    Log.e("FOF", "last Visible Item: " + lastVisibleItem);
 
                     if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                         // End has been reached
@@ -97,7 +94,7 @@ public class EndlessRecyclerViewNewsAdapter extends RecyclerView.Adapter {
             ((NewsViewHolder)holder).title.setText(singleNews.getTitle());
             ((NewsViewHolder)holder).content.setText(singleNews.getSubject());
 
-            ((NewsViewHolder)holder).date.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.US).format(singleNews.getCreatedAt()));
+            ((NewsViewHolder)holder).date.setText(singleNews.getCreatedAt().substring(0, 9));
         } else {
             ((ProgressViewHolder)holder).progressBar.setIndeterminate(true);
         }

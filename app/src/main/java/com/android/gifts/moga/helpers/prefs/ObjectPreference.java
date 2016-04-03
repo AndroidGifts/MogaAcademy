@@ -1,7 +1,6 @@
 package com.android.gifts.moga.helpers.prefs;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.android.gifts.moga.helpers.Constants;
 
@@ -13,8 +12,6 @@ public class ObjectPreference extends Application {
         super.onCreate();
         complexPreferences = ComplexPreferences.getComplexPreferences(getBaseContext(),
                 Constants.PREFERENCE_NAME, MODE_PRIVATE);
-
-        Log.e("FOF", "Pref Created");
     }
 
     public ComplexPreferences getComplexPreference() {

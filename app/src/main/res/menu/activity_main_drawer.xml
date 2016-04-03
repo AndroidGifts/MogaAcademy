@@ -2,14 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/first_year" android:icon="@android:drawable/ic_menu_camera"
-            android:title="الفرقة الأولى" />
-        <item android:id="@+id/second_year" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="الفرقة الثانية" />
-        <item android:id="@+id/third_year" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="الفرقة الثالثة" />
-        <item android:id="@+id/fourth_year" android:icon="@android:drawable/ic_menu_manage"
-            android:title="الفرقة الرابعة" />
+        <item android:id="@+id/first_year" android:icon="@drawable/ic_filter_1_black_24dp"
+            android:title="@string/first_year" />
+        <item android:id="@+id/second_year" android:icon="@drawable/ic_filter_2_black_24dp"
+            android:title="@string/second_year" />
+        <item android:id="@+id/third_year" android:icon="@drawable/ic_filter_3_black_24dp"
+            android:title="@string/third_year" />
+        <item android:id="@+id/fourth_year" android:icon="@drawable/ic_filter_4_black_24dp"
+            android:title="@string/fourth_year" />
+        <item android:id="@+id/open_learning" android:icon="@drawable/ic_mode_edit_black_24dp"
+            android:title="@string/open_learning" />
+        <item android:id="@+id/high_studies" android:icon="@drawable/ic_trending_up_black_24dp"
+            android:title="@string/high_studies" />
+        <item android:id="@+id/settings" android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings" />
+        <item android:id="@+id/about_us" android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/about_us" />
+        <item android:id="@+id/contact_us" android:icon="@drawable/ic_call_black_24dp"
+            android:title="@string/contact_us" />
     </group>
 
 </menu>

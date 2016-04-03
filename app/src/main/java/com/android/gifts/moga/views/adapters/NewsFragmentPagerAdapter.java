@@ -24,11 +24,6 @@ public class NewsFragmentPagerAdapter extends FragmentPagerAdapter {
         return fragments.get(position);
     }
 
-    public void add(List<News> news) {
-        fragments.add(NewsFragment.newInstance(news));
-        Log.e("FOF", "NewsFragment.newInstance");
-    }
-
     @Override
     public int getCount() {
         return fragments.size();

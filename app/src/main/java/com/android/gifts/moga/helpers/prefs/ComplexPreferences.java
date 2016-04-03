@@ -7,7 +7,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 public class ComplexPreferences {
-    private Context context;
     private SharedPreferences sharedPreferences;
     private Gson gson;
     private SharedPreferences.Editor editor;
@@ -15,7 +14,6 @@ public class ComplexPreferences {
     private static ComplexPreferences complexPreferences;
 
     private ComplexPreferences(Context context, String name, int mode) {
-        this.context = context;
         gson = new Gson();
 
         if (name == null || name.isEmpty())  {
@@ -31,8 +29,6 @@ public class ComplexPreferences {
             complexPreferences = new ComplexPreferences(context, name, mode);
         }
 
-        Log.e("FOF", "LOCAL getComplexPreference Called");
-
         return complexPreferences;
     }
 
@@ -45,12 +41,14 @@ public class ComplexPreferences {
         }
 
         editor.putString(key, gson.toJson(object));
-        Log.e("FOF", "PUTTED OBJECT");
     }
 
-    public void commmit() {
+    public void commit() {
         editor.commit();
-        Log.e("FOF", "COMMIT HERE");
+    }
+
+    public void clearPrefs() {
+        editor.clear().commit();
     }
 
     public void deleteObject(String key) {
@@ -64,7 +62,6 @@ public class ComplexPreferences {
             return null;
         } else {
             try {
-                Log.e("FOF", "OBJECT RETURNED");
                 return gson.fromJson(json, a);
             } catch (Exception e) {
                 throw new IllegalArgumentException("Object stored with key "

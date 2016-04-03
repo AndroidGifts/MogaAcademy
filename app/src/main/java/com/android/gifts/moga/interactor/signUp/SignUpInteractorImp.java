@@ -47,7 +47,7 @@ public class SignUpInteractorImp implements SignUpInteractor {
                     if (registerResponse.getResult().getCode() == 0) {
                         // Save user to prefs
                         complexPreferences.putObject(Constants.USER_PREF_KEY, registerResponse.getUserVm());
-                        complexPreferences.commmit();
+                        complexPreferences.commit();
 
                         listener.onSuccess();
                     } else if (registerResponse.getResult().getCode() == 2) {
