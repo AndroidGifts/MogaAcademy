@@ -1,7 +1,6 @@
 package com.android.gifts.moga.interactor.main;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.gifts.moga.API.MogaApiInterface;
 import com.android.gifts.moga.API.RestClient;
@@ -12,6 +11,8 @@ import com.android.gifts.moga.API.model.UserVm;
 import com.android.gifts.moga.helpers.Constants;
 import com.android.gifts.moga.helpers.prefs.ComplexPreferences;
 import com.android.gifts.moga.helpers.prefs.ObjectPreference;
+import com.android.gifts.moga.interactor.notifications.NotificationInteractor;
+import com.android.gifts.moga.interactor.notifications.NotificationsInteractorImp;
 import com.android.gifts.moga.presenter.main.OnFinishedMainListener;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,8 +22,10 @@ public class MainInteractorImp implements MainInteractor {
     ComplexPreferences complexPreferences;
     MogaApiInterface service;
     UserVm currentUser;
+    Context context;
 
     public MainInteractorImp(Context context) {
+        this.context = context;
         ObjectPreference preference = (ObjectPreference) context.getApplicationContext();
         complexPreferences = preference.getComplexPreference();
         service = RestClient.getClient();
@@ -147,6 +150,11 @@ public class MainInteractorImp implements MainInteractor {
 
     @Override
     public void deleteUser() {
+
+        // Delete Device ID from server also
+        NotificationInteractor notificationInteractor = new NotificationsInteractorImp(context);
+        notificationInteractor.deleteDevice(complexPreferences.getObject(Constants.USER_DEVICE_ID, String.class));
+
         complexPreferences.deleteObject(Constants.USER_PREF_KEY);
         complexPreferences.commit();
         userDeleted = true;

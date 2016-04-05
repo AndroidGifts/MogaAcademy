@@ -35,7 +35,7 @@ public class SignUpInteractorImp implements SignUpInteractor {
         hashMap.put("Password", password);
         hashMap.put("YearId", year);
 
-        Call<LoginRegisterResponse> call = service.registerUser(hashMap);
+        Call<LoginRegisterResponse> call = service.signUpUser(hashMap);
 
         call.enqueue(new Callback<LoginRegisterResponse>() {
             @Override

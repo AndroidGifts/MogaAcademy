@@ -1,7 +1,9 @@
 package com.android.gifts.moga.views.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -22,16 +25,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.gifts.moga.R;
+import com.android.gifts.moga.gcm.GcmIntentService;
 import com.android.gifts.moga.helpers.Constants;
 import com.android.gifts.moga.helpers.UIHelper;
+import com.android.gifts.moga.helpers.prefs.ComplexPreferences;
+import com.android.gifts.moga.helpers.prefs.ObjectPreference;
 import com.android.gifts.moga.presenter.main.MainPresenter;
 import com.android.gifts.moga.presenter.main.MainPresenterImp;
 import com.android.gifts.moga.views.adapters.NewsFragmentPagerAdapter;
 import com.android.gifts.moga.views.fragments.NewsFragment;
 import com.android.gifts.moga.views.fragments.SettingsFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +70,13 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.toolbar_title)
     TextView toolbarTitle;
 
+    // Used for GCM
+    private String TAG = MainActivity.class.getSimpleName();
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+
+    private ComplexPreferences complexPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +84,10 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Getting shared Prefs object to save user device ID
+        ObjectPreference preference = (ObjectPreference) getApplicationContext();
+        complexPreferences = preference.getComplexPreference();
 
         ButterKnife.bind(this);
         UIHelper uiHelper = new UIHelper(this);
@@ -93,7 +113,83 @@ public class MainActivity extends AppCompatActivity
         setUpNavigation();
         setUpTabs();
 
-        setUpFragments((int)userYear);
+        setUpFragments((int) userYear);
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Log.e("MYLOG", "Intent Received, intent action: " + intent.getAction());
+
+                // checking for type intent filter
+                if (intent.getAction().equals(Constants.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    String token = intent.getStringExtra("token");
+                    complexPreferences.putObject(Constants.USER_DEVICE_ID, token);
+
+                    Log.e("MYLOG", "GCM registration token: " + token);
+
+                } else if (intent.getAction().equals(Constants.SENT_TOKEN_TO_SERVER)) {
+                    // gcm registration id is stored in our server's MySQL
+
+                    Log.e("MYLOG", "GCM registration token is stored in server!");
+
+                } else if (intent.getAction().equals(Constants.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    Toast.makeText(getApplicationContext(), "Push notification is received!", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        if (checkPlayServices()) {
+            registerGCM();
+        }
+    }
+
+    // starting the service to register with GCM
+    private void registerGCM() {
+        Intent intent = new Intent(this, GcmIntentService.class);
+        intent.putExtra("key", "register");
+        startService(intent);
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported. Google Play Services not installed!");
+                Toast.makeText(getApplicationContext(), "This device is not supported. Google Play Services not installed!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Constants.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Constants.PUSH_NOTIFICATION));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

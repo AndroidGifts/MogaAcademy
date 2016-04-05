@@ -21,7 +21,7 @@ public interface MogaApiInterface {
 
     @POST("/service/api/Users/Register")
     @Headers({"Content-Type:application/json"})
-    Call<LoginRegisterResponse> registerUser(@Body HashMap<String, Object> body);
+    Call<LoginRegisterResponse> signUpUser(@Body HashMap<String, Object> body);
 
     @GET("/service/api/News/GetNews")
     Call<NewsResponse> getNews(@Query("pageIndex") int pageIndex, @Query("pageSize") int pageSize,
@@ -37,4 +37,12 @@ public interface MogaApiInterface {
     @POST("/service/api/Users/ForgetPassword")
     @Headers({"Content-Type:application/json"})
     Call<Result> sendNewPassword(@Query("email") String email);
+
+    @POST("/service/api/Notification/RegisterDevice")
+    @Headers({"Content-Type:application/json"})
+    Call<Result> registerDevice(@Body HashMap<String, Object> body);
+
+    @POST("/service/api/Notification/DeleteDevice")
+    @Headers({"Content-Type:application/json"})
+    Call<Result> deleteDevice(@Body HashMap<String, Object> body);
 }
