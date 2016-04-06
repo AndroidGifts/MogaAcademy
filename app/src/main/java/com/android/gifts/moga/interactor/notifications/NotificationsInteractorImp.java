@@ -35,7 +35,7 @@ public class NotificationsInteractorImp implements NotificationInteractor {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("UserId", currentUser.getId());
         hashMap.put("DeviceId", DeviceId);
-        hashMap.put("YearId", currentUser.getYearId());
+        hashMap.put("TypeId", 1);
 
         Call<Result> call = service.registerDevice(hashMap);
 
@@ -65,7 +65,7 @@ public class NotificationsInteractorImp implements NotificationInteractor {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("UserId", currentUser.getId());
         hashMap.put("DeviceId", DeviceId);
-        hashMap.put("YearId", currentUser.getYearId());
+        hashMap.put("TypeId", 1);
 
         Call<Result> call = service.deleteDevice(hashMap);
 

@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.android.gifts.moga.views.fragments.staticFragments.AboutUsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="من نحن"
+                android:textAppearance="@style/AppTheme.Widget.TextView"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="12dp"
+                android:text="تأسست أكاديمية موجه للخدمات التعليمية عام 1999 وهي بذلك أقدم كيان للخدمات التعليمية يخدم كلية التجارة"
+                android:textAppearance="@style/AppTheme.Widget.TextView"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="12dp"
+                android:text="تقدم أكاديمية موجه أعلي مستوي من الخدمات التعليمية ( ورق محاضرات – ورق دروس – محاضرات شرح – إجابات نموذجية للامتحانات السابقة – أسئلة وأجوبة متنوعة – حلول التطبيقات – إعداد الأبحاث والمشاريع المطلوبة – المراجعات النهائية ) كما تقدم أكاديمية موجه بعض الخدمات الأخرى مثل كورسات اللغة الإنجليزية والتنمية البشرية في الأجازة الصيفية وكذلك بعض الأنشطة الاجتماعية مثل تنظيم الرحلات والأيام الترفيهية. "
+                android:textAppearance="@style/AppTheme.Widget.TextView"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="12dp"
+                android:text="تتربع مكتبة موجه علي عرش الخدمات التعليمية في كلية التجارة فهي صاحبة أكبر تجمع طلابي لجميع الفرق والتخصصات وتحتل المركز الأول بجدارة في حجم المبيعات وعدد الطلاب وذلك بسبب الاهتمام بجودة الخدمة التعليمية المقدمة والتطوير المستمر وتميزها بنخبة تمثل أفضل وأكفأ الأساتذة وأكثرهم خبرة"
+                android:textAppearance="@style/AppTheme.Widget.TextView"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="12dp"
+                android:text="إذا أرضيناك فتحدث عنا ... وإذا لم نرضيك فتحدث إلينا"
+                android:textAppearance="@style/AppTheme.Widget.TextView"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

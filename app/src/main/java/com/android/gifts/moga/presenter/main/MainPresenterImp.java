@@ -97,7 +97,7 @@ public class MainPresenterImp implements MainPresenter, OnFinishedMainListener {
     @Override
     public void onNoNewsFound() {
         if (pageIndex > 0) {
-            newsFragmentView.hideSpinner();
+            //newsFragmentView.hideSpinner();
         } else {
             newsFragmentView.hideProgress();
         }

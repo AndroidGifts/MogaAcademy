@@ -37,7 +37,10 @@ import com.android.gifts.moga.helpers.prefs.ObjectPreference;
 import com.android.gifts.moga.presenter.main.MainPresenter;
 import com.android.gifts.moga.presenter.main.MainPresenterImp;
 import com.android.gifts.moga.views.adapters.NewsFragmentPagerAdapter;
+import com.android.gifts.moga.views.fragments.staticFragments.AboutUsFragment;
+import com.android.gifts.moga.views.fragments.staticFragments.HighStudiesFragment;
 import com.android.gifts.moga.views.fragments.NewsFragment;
+import com.android.gifts.moga.views.fragments.staticFragments.OpenLearningFragment;
 import com.android.gifts.moga.views.fragments.SettingsFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -239,11 +242,23 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.contact_us) {
 
         } else if (id == R.id.about_us) {
-
+            setupSingleFragment("من نحن");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_activity_layout, AboutUsFragment.newInstance());
+            ft.addToBackStack(null);
+            ft.commit();
         } else if (id == R.id.open_learning) {
-
+            setupSingleFragment("التعليم المفتوح");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_activity_layout, OpenLearningFragment.newInstance());
+            ft.addToBackStack(null);
+            ft.commit();
         } else if (id == R.id.high_studies) {
-
+            setupSingleFragment("الدراسات العليا");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_activity_layout, HighStudiesFragment.newInstance());
+            ft.addToBackStack(null);
+            ft.commit();
         }
 
         drawer.closeDrawer(GravityCompat.END);
