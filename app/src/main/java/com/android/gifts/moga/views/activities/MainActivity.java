@@ -37,6 +37,7 @@ import com.android.gifts.moga.helpers.prefs.ObjectPreference;
 import com.android.gifts.moga.presenter.main.MainPresenter;
 import com.android.gifts.moga.presenter.main.MainPresenterImp;
 import com.android.gifts.moga.views.adapters.NewsFragmentPagerAdapter;
+import com.android.gifts.moga.views.fragments.ContactFragment;
 import com.android.gifts.moga.views.fragments.staticFragments.AboutUsFragment;
 import com.android.gifts.moga.views.fragments.staticFragments.HighStudiesFragment;
 import com.android.gifts.moga.views.fragments.NewsFragment;
@@ -240,7 +241,11 @@ public class MainActivity extends AppCompatActivity
             ft.addToBackStack(null);
             ft.commit();
         } else if (id == R.id.contact_us) {
-
+            setupSingleFragment("إتصل بنا");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_activity_layout, ContactFragment.newInstance());
+            ft.addToBackStack(null);
+            ft.commit();
         } else if (id == R.id.about_us) {
             setupSingleFragment("من نحن");
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
@@ -271,12 +276,7 @@ public class MainActivity extends AppCompatActivity
         this.toolbarTitle.setText(toolbarTitle);
     }
 
-    @Override
-    public void setUpFragments(int yearId) {
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
-        this.toolbarTitle.setText("أخر الأخبار");
-
+    private void removeFragments() {
         tabLayout.removeAllTabs();
 
         for (int i = 0; i < fragments.size(); i++) {
@@ -287,6 +287,15 @@ public class MainActivity extends AppCompatActivity
             manager.popBackStack();
         }
         fragments = new ArrayList<>();
+    }
+
+    @Override
+    public void setUpFragments(int yearId) {
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+        this.toolbarTitle.setText("أخر الأخبار");
+
+        removeFragments();
 
         if (yearId <= 2) {
             tabLayout.addTab(tabLayout.newTab().setText("إنتساب"));

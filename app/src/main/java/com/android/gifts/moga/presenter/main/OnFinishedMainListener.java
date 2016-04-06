@@ -13,5 +13,7 @@ public interface OnFinishedMainListener {
 
     void onUpdateSuccess();
 
+    void onContactSuccess();
+
     void onFail();
 }

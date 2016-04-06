@@ -11,6 +11,8 @@ public interface MainPresenter {
 
     void updateUser(String name, int year);
 
+    void sendContactMsg(String message);
+
     void logOutUser();
     void clearNews();
 }

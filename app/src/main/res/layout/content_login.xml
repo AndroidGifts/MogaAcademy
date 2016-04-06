@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="right"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -16,18 +17,19 @@
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="right"
         android:layout_marginTop="100dp"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/credentials"
-            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:layout_marginRight="32dp"
             android:layout_weight="0.1"
             android:hint="@string/credentials"
-            android:textDirection="rtl"
+            android:inputType="text"
             android:textSize="14sp" />
 
         <ImageView
@@ -44,6 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout1"
+        android:layout_gravity="right"
         android:layout_marginTop="60dp"
         android:orientation="horizontal">
 
@@ -56,7 +59,6 @@
             android:layout_weight="0.1"
             android:hint="@string/password_text"
             android:inputType="textPassword"
-            android:textDirection="rtl"
             android:textSize="14sp" />
 
         <ImageView
@@ -69,15 +71,15 @@
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/login_btn"
+        android:id="@+id/send_btn"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:textAppearance="@style/AppTheme.Widget.Button"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
-        android:text="@string/login_text" />
+        android:text="@string/login_text"
+        android:textAppearance="@style/AppTheme.Widget.Button" />
 
     <TextView
         android:id="@+id/forgot_pass_text"

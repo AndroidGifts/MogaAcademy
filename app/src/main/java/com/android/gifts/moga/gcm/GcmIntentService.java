@@ -37,9 +37,9 @@ public class GcmIntentService extends IntentService {
     }
 
     public static final String KEY = "key";
-    public static final String TOPIC = "topic";
+    /*public static final String TOPIC = "topic";
     public static final String SUBSCRIBE = "subscribe";
-    public static final String UNSUBSCRIBE = "unsubscribe";
+    public static final String UNSUBSCRIBE = "unsubscribe";*/
 
 
     @Override
@@ -48,7 +48,7 @@ public class GcmIntentService extends IntentService {
 
         Log.e("MYLOG", "onHandleIntent called, intent key: " + key);
 
-        switch (key) {
+        /*switch (key) {
             case SUBSCRIBE:
                 // subscribe to a topic
                 String topic = intent.getStringExtra(TOPIC);
@@ -61,7 +61,9 @@ public class GcmIntentService extends IntentService {
             default:
                 // if key is not specified, register with GCM
                 registerGCM();
-        }
+        }*/
+
+        registerGCM();
 
     }
 
@@ -109,7 +111,7 @@ public class GcmIntentService extends IntentService {
     /**
      * Subscribe to a topic
      */
-    public void subscribeToTopic(String topic) {
+    /*public void subscribeToTopic(String topic) {
         GcmPubSub pubSub = GcmPubSub.getInstance(getApplicationContext());
         InstanceID instanceID = InstanceID.getInstance(getApplicationContext());
         String token = null;
@@ -145,5 +147,5 @@ public class GcmIntentService extends IntentService {
             Log.e(TAG, "Topic unsubscribe error. Topic: " + topic + ", error: " + e.getMessage());
             Toast.makeText(getApplicationContext(), "Topic subscribe error. Topic: " + topic + ", error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 }

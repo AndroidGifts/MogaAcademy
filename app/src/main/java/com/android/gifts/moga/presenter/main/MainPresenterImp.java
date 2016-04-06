@@ -5,9 +5,9 @@ import android.content.Context;
 import com.android.gifts.moga.API.model.News;
 import com.android.gifts.moga.API.model.Schedule;
 import com.android.gifts.moga.API.model.UserVm;
-import com.android.gifts.moga.helpers.UIValidator;
 import com.android.gifts.moga.interactor.main.MainInteractor;
 import com.android.gifts.moga.interactor.main.MainInteractorImp;
+import com.android.gifts.moga.views.fragments.ContactFragmentView;
 import com.android.gifts.moga.views.fragments.NewsFragmentView;
 import com.android.gifts.moga.views.fragments.SettingsFragmentView;
 
@@ -18,6 +18,9 @@ public class MainPresenterImp implements MainPresenter, OnFinishedMainListener {
     private NewsFragmentView newsFragmentView;
 
     private SettingsFragmentView settingsFragmentView;
+
+    private ContactFragmentView contactFragmentView;
+
     private UserVm currentUser;
 
     private int pageIndex = 0;
@@ -28,15 +31,18 @@ public class MainPresenterImp implements MainPresenter, OnFinishedMainListener {
     }
 
     public MainPresenterImp(NewsFragmentView newsFragmentView, Context context) {
+        this(context);
         this.newsFragmentView = newsFragmentView;
-        interactor = new MainInteractorImp(context);
-        currentUser = interactor.getUser();
     }
 
     public MainPresenterImp(SettingsFragmentView settingsFragmentView, Context context) {
+        this(context);
         this.settingsFragmentView = settingsFragmentView;
-        interactor = new MainInteractorImp(context);
-        currentUser = interactor.getUser();
+    }
+
+    public MainPresenterImp(ContactFragmentView contactFragmentView, Context context) {
+        this(context);
+        this.contactFragmentView = contactFragmentView;
     }
 
     @Override
@@ -59,6 +65,23 @@ public class MainPresenterImp implements MainPresenter, OnFinishedMainListener {
                 interactor.updateUser(new UserVm(currentUser.getId(), name, currentUser.getEmail(), currentUser.getMobile(),
                         currentUser.getPassword(), year, currentUser.getCreatedAt()), this);
             }
+        }
+    }
+
+    @Override
+    public void sendContactMsg(String message) {
+        if (contactFragmentView != null) {
+            contactFragmentView.showProgress();
+        }
+
+        interactor.contactUs(message, this);
+    }
+
+    @Override
+    public void onContactSuccess() {
+        if (contactFragmentView != null) {
+            contactFragmentView.hideProgress();
+            contactFragmentView.showSuccessMessage();
         }
     }
 
@@ -115,11 +138,18 @@ public class MainPresenterImp implements MainPresenter, OnFinishedMainListener {
 
     @Override
     public void onSchedulesSuccess(List<Schedule> schedules) {
-
+        newsFragmentView.initializeSchedules(schedules);
     }
 
     @Override
     public void onFail() {
-        newsFragmentView.hideProgress();
+        if (newsFragmentView != null) {
+            newsFragmentView.hideProgress();
+        }
+
+        if (contactFragmentView != null) {
+            contactFragmentView.hideProgress();
+            contactFragmentView.showFailMessage();
+        }
     }
 }

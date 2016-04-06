@@ -2,21 +2,16 @@ package com.android.gifts.moga.views.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.android.gifts.moga.R;
 import com.android.gifts.moga.helpers.Constants;
 import com.android.gifts.moga.presenter.login.LoginPresenter;
 import com.android.gifts.moga.presenter.login.LoginPresenterImp;
-import com.android.gifts.moga.views.BaseView;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -58,7 +53,7 @@ public class LauncherActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(context));
     }
 
-    @OnClick(R.id.login_btn)
+    @OnClick(R.id.send_btn)
     public void goToLogin() {
         startActivity(new Intent(LauncherActivity.this, LoginActivity.class));
     }

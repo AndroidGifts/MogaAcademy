@@ -45,4 +45,7 @@ public interface MogaApiInterface {
     @POST("/service/api/Notification/DeleteDevice")
     @Headers({"Content-Type:application/json"})
     Call<Result> deleteDevice(@Body HashMap<String, Object> body);
+
+    @POST("/service/api/General/ContactUs")
+    Call<Result> contactUs(@Query("userId") int userId, @Query("message") String message);
 }

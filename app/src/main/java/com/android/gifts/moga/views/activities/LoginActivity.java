@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         password.setGravity(Gravity.RIGHT);
     }
 
-    @OnClick(R.id.login_btn)
+    @OnClick(R.id.send_btn)
     public void loginUser() {
         String login = credentials.getText().toString();
         String pass = password.getText().toString();

@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/contact_fragment_layout"
+    tools:context="com.android.gifts.moga.views.fragments.ContactFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|right"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/contact_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:ems="10"
+            android:hint="الرسالة"
+            android:inputType="textMultiLine" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/send_btn"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="16dp"
+            android:text="أرسل"
+            android:textAppearance="@style/AppTheme.Widget.Button" />
+    </LinearLayout>
+
+</FrameLayout>

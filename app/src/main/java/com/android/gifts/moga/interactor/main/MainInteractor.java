@@ -12,4 +12,6 @@ public interface MainInteractor {
     void deletePrefs();
 
     void updateUser(UserVm user, OnFinishedMainListener listener);
+
+    void contactUs(String message, OnFinishedMainListener listener);
 }

@@ -103,6 +103,30 @@ public class MainInteractorImp implements MainInteractor {
     }
 
     @Override
+    public void contactUs(String message, final OnFinishedMainListener listener) {
+        Call<Result> call = service.contactUs((int) getUser().getId(), message);
+
+        call.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                if (response.isSuccess()) {
+                    long code = response.body().getCode();
+                    if (code == 0) {
+                        listener.onContactSuccess();
+                    } else {
+                        listener.onFail();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                listener.onFail();
+            }
+        });
+    }
+
+    @Override
     public void getSchedules(final int yearId, final int typeId, final OnFinishedMainListener listener) {
         SchedulesResponse cachedResponse = complexPreferences.getObject(Constants.SCHEDULES + yearId + typeId, SchedulesResponse.class);
 

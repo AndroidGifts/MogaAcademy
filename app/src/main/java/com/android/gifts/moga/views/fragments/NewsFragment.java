@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.android.gifts.moga.API.model.News;
+import com.android.gifts.moga.API.model.Schedule;
 import com.android.gifts.moga.R;
 import com.android.gifts.moga.presenter.main.MainPresenter;
 import com.android.gifts.moga.presenter.main.MainPresenterImp;
@@ -39,6 +41,8 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
 
     private MainPresenter presenter;
     @Bind(R.id.fragment_progress_bar) ProgressBar progressBar;
+
+    private String scheduleType1, scheduleType2, scheduleType3;
 
     public NewsFragment() {
 
@@ -77,21 +81,21 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
     @OnClick(R.id.left_layout)
     public void openLeftSchedule() {
         intent.putExtra("title", "جدول الملازم");
-        intent.putExtra("scheduleURL", "http://pbs.twimg.com/media/Bist9mvIYAAeAyQ.jpg");
+        intent.putExtra("scheduleURL", scheduleType2);
         startActivity(intent);
     }
 
     @OnClick(R.id.center_layout)
     public void openCenterSchedule() {
         intent.putExtra("title", "مواعيد الشرح");
-        intent.putExtra("scheduleURL", "http://androidgifts.com/wp-content/uploads/2016/03/bottom_navigation_cover_2.png");
+        intent.putExtra("scheduleURL", scheduleType3);
         startActivity(intent);
     }
 
     @OnClick(R.id.right_layout)
     public void openRightSchedule() {
         intent.putExtra("title", "جدول المحاضرات و السكاشن");
-        intent.putExtra("scheduleURL", "http://androidgifts.com/wp-content/uploads/2015/08/logotrial.png");
+        intent.putExtra("scheduleURL", scheduleType1);
         startActivity(intent);
     }
 
@@ -133,6 +137,27 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
 
         endlessNewsAdapter.setLoaded();
         pageIndex++;
+    }
+
+    @Override
+    public void initializeSchedules(List<Schedule> schedules) {
+        for (int i = 0; i < 3; i++) {
+            Log.e("MYLOG", "GOT SCHEDULE NUM: " + i + ", URL" + schedules.get(i).getImageUrl());
+
+            int scheduleType = (int) schedules.get(i).getScheduleType();
+
+            switch (scheduleType) {
+                case 1:
+                    scheduleType1 = schedules.get(i).getImageUrl();
+                    break;
+                case 2:
+                    scheduleType2 = schedules.get(i).getImageUrl();
+                    break;
+                case 3:
+                    scheduleType3 = schedules.get(i).getImageUrl();
+                    break;
+            }
+        }
     }
 
     @Override
