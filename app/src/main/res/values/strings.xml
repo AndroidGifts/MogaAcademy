@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">أكاديمية موجه</string>
+    <string name="app_name">Moga</string>
+    <string name="launcher_name">أكاديمية موجه</string>
     <string name="action_settings">الإعدادات</string>
     <string name="login_text">تسجيل الدخول</string>
     <string name="sign_up_text">إنشاء حساب</string>
@@ -29,4 +30,9 @@
     <string name="about_us">من نحن</string>
     <string name="contact_us">إتصل بنا</string>
     <string name="error_msg">حدث خطأ, برجاء المحاولة مرة أخرى</string>
+
+    <string name="contact_us_address">100 أ ش منصور - بجوار سوبر ماركت راية - مول حلوان - الدور الثانى</string>
+    <string name="contact_us_tel">01120446175 - 01155175577 \n01275134512 - 01284130205</string>
+    <string name="contact_us_welcome">يسعدنا تلقي مكالماتكم علي الارقام التالية لأي استفسارات</string>
+
 </resources>

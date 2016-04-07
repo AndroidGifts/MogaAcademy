@@ -17,17 +17,9 @@ public class MyGcmPushReceiver extends GcmListenerService {
 
     private NotificationUtils notificationUtils;
 
-    /**
-     * Called when message is received.
-     *
-     * @param from   SenderID of the sender.
-     * @param bundle Data bundle containing message data as key/value pairs.
-     *               For Set of keys use data.keySet().
-     */
-
     @Override
     public void onMessageReceived(String from, Bundle bundle) {
-        String title = bundle.getString("title");
+        String title = "أكاديمية موجه";
         String message = bundle.getString("message");
         String image = bundle.getString("image");
         String timestamp = bundle.getString("created_at");
@@ -37,7 +29,18 @@ public class MyGcmPushReceiver extends GcmListenerService {
         Log.e(TAG, "image: " + image);
         Log.e(TAG, "timestamp: " + timestamp);
 
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+        resultIntent.putExtra("message", message);
+
+        if (TextUtils.isEmpty(image)) {
+            showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+        } else {
+            showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, image);
+        }
+
+        /*if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+
+            Log.e("MYLOG", "App Not in background");
 
             // app is in foreground, broadcast the push message
             Intent pushNotification = new Intent(Constants.PUSH_NOTIFICATION);
@@ -57,7 +60,7 @@ public class MyGcmPushReceiver extends GcmListenerService {
             } else {
                 showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, image);
             }
-        }
+        }*/
     }
 
     /**
