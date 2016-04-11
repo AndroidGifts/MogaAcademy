@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,7 +32,7 @@ import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class SignUpActivity extends AppCompatActivity implements RegisterView, AdapterView.OnItemSelectedListener {
+public class SignUpActivity extends AppCompatActivity implements RegisterView{
     @Bind(R.id.user_name)
     EditText userName;
     @Bind(R.id.user_email)
@@ -44,6 +45,8 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
     EditText userPasswordConfirm;
     @Bind(R.id.year_spinner)
     Spinner userYear;
+    @Bind(R.id.type_spinner)
+    Spinner userType;
     @Bind(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
 
@@ -52,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
     MaterialDialog progressDialog;
 
     int userYearSelected = 1;
+    int userTypeSelected = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,63 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
 
         ButterKnife.bind(this);
 
-        userYear.setOnItemSelectedListener(this);
+        final List<String> type1 = new ArrayList<>();
+        type1.add("إنتظام");
+        type1.add("إنتساب");
+
+        final List<String> type2 = new ArrayList<>();
+        type2.add("إدارة");
+        type2.add("محاسبة");
+        type2.add("خارجية");
+
+        final ArrayAdapter<String> typeAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, type1);
+        typeAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        final ArrayAdapter<String> typeAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, type2);
+        typeAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        userType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (userYearSelected <= 2) {
+                    userTypeSelected = position + 1;
+                } else {
+                    userTypeSelected = position + 3;
+                }
+
+                Log.e("MYLOG", "type id: " + userTypeSelected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        final ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, type1);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userType.setAdapter(typeAdapter);
+
+        userYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                userYearSelected = position + 1;
+
+                if (userYearSelected <= 2) {
+                    userType.setAdapter(typeAdapter1);
+                } else {
+                    userType.setAdapter(typeAdapter2);
+                }
+
+                Log.e("MYLOG", "year id: " + userYearSelected);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         List<String> years = new ArrayList<>();
         years.add("الفرقة الأولى");
         years.add("الفرقة الثانية");
@@ -72,9 +132,11 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
         years.add("الفرقة الرابعة");
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        userYear.setAdapter(dataAdapter);
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userYear.setAdapter(yearAdapter);
+
+
 
         uiHelper = new UIHelper(this);
         progressDialog = uiHelper.getSpinnerProgressDialog("إنشاء حساب");
@@ -89,16 +151,6 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
 
         userPassword.setGravity(Gravity.RIGHT);
         userPasswordConfirm.setGravity(Gravity.RIGHT);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        userYearSelected = position + 1;
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Do Nothing
     }
 
     @Override
@@ -119,7 +171,7 @@ public class SignUpActivity extends AppCompatActivity implements RegisterView, A
         userMobile.setError(null);
         userPassword.setError(null);
 
-        presenter.register(name, mail, mobile, password1, password2, userYearSelected);
+        presenter.register(name, mail, mobile, password1, password2, userYearSelected, userTypeSelected);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.android.gifts.moga.views.adapters.endlessRecycler;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,8 +94,12 @@ public class EndlessRecyclerViewNewsAdapter extends RecyclerView.Adapter {
 
             ((NewsViewHolder)holder).title.setText(singleNews.getTitle());
             ((NewsViewHolder)holder).content.setText(singleNews.getSubject());
+            Linkify.addLinks(((NewsViewHolder)holder).content, Linkify.WEB_URLS);
 
-            ((NewsViewHolder)holder).date.setText(singleNews.getCreatedAt().substring(0, 9));
+            String date = singleNews.getCreatedAt().substring(0, 10);
+            String time = singleNews.getCreatedAt().substring(11, 16);
+
+            ((NewsViewHolder) holder).date.setText(time + " / " + date);
         } else {
             ((ProgressViewHolder)holder).progressBar.setIndeterminate(true);
         }

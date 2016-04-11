@@ -1,6 +1,7 @@
 package com.android.gifts.moga.interactor.signUp;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.gifts.moga.API.MogaApiInterface;
 import com.android.gifts.moga.API.RestClient;
@@ -25,7 +26,8 @@ public class SignUpInteractorImp implements SignUpInteractor {
     }
 
     @Override
-    public void register(String name, String mail, String mobile, String password, int year, final OnFinishedRegisterListener listener) {
+    public void register(String name, String mail, String mobile, String password,
+                         int year, int type, final OnFinishedRegisterListener listener) {
         MogaApiInterface service = RestClient.getClient();
 
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -34,6 +36,7 @@ public class SignUpInteractorImp implements SignUpInteractor {
         hashMap.put("Mobile", mobile);
         hashMap.put("Password", password);
         hashMap.put("YearId", year);
+        hashMap.put("TypeId", type);
 
         Call<LoginRegisterResponse> call = service.signUpUser(hashMap);
 
@@ -48,6 +51,8 @@ public class SignUpInteractorImp implements SignUpInteractor {
                         // Save user to prefs
                         complexPreferences.putObject(Constants.USER_PREF_KEY, registerResponse.getUserVm());
                         complexPreferences.commit();
+
+                        Log.e("MYLOG", "Registered user typeID: " + registerResponse.getUserVm().getTypeId());
 
                         listener.onSuccess();
                     } else if (registerResponse.getResult().getCode() == 2) {

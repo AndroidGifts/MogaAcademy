@@ -3,6 +3,7 @@ package com.android.gifts.moga.views.fragments;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +38,17 @@ public class SettingsFragment extends Fragment implements SettingsFragmentView {
     EditText userName;
     @Bind(R.id.year_spinner)
     Spinner userYear;
+    @Bind(R.id.type_spinner)
+    Spinner userType;
+
+    int userTypeSelected = 1;
+
+    UserVm user;
 
     private int selectedYear;
     private RelativeLayout relativeLayout;
+
+    private boolean enableListener = false;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -60,12 +69,58 @@ public class SettingsFragment extends Fragment implements SettingsFragmentView {
         progressDialog = uiHelper.getSpinnerProgressDialog("جارى تعديل البيانات");
 
         presenter = new MainPresenterImp(this, getActivity());
-        UserVm user = presenter.getUser();
+        user = presenter.getUser();
+
+        Log.e("MYLOG", "user yearid" + user.getYearId() + ", typeid" + user.getTypeId());
+
+        final List<String> type1 = new ArrayList<>();
+        type1.add("إنتظام");
+        type1.add("إنتساب");
+
+        final List<String> type2 = new ArrayList<>();
+        type2.add("إدارة");
+        type2.add("محاسبة");
+        type2.add("خارجية");
+
+        final ArrayAdapter<String> typeAdapter1 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, type1);
+        typeAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        final ArrayAdapter<String> typeAdapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, type2);
+        typeAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        userType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (selectedYear <= 2) {
+                    userTypeSelected = position + 1;
+                } else {
+                    userTypeSelected = position + 3;
+                }
+
+                Log.e("MYLOG", "type id: " + userTypeSelected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         userYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedYear = position + 1;
+
+                if (enableListener) {
+                    if (selectedYear <= 2) {
+                        userType.setAdapter(typeAdapter1);
+                    } else {
+                        userType.setAdapter(typeAdapter2);
+                    }
+                }
+
+                enableListener = true;
+                Log.e("MYLOG", "year id: " + selectedYear);
             }
 
             @Override
@@ -85,7 +140,17 @@ public class SettingsFragment extends Fragment implements SettingsFragmentView {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userYear.setAdapter(dataAdapter);
 
+
         userYear.setSelection((int) (user.getYearId() - 1), false);
+
+        if (user.getYearId() <= 2) {
+            userType.setAdapter(typeAdapter1);
+            userType.setSelection((int) (user.getTypeId()  - 1), false);
+        } else {
+            userType.setAdapter(typeAdapter2);
+            userType.setSelection((int) (user.getTypeId()  - 3), false);
+        }
+
         userName.setText(user.getName());
 
         return rootView;
@@ -97,7 +162,7 @@ public class SettingsFragment extends Fragment implements SettingsFragmentView {
 
         userName.setError(null);
 
-        presenter.updateUser(name, selectedYear);
+        presenter.updateUser(name, selectedYear, userTypeSelected);
     }
 
     @Override

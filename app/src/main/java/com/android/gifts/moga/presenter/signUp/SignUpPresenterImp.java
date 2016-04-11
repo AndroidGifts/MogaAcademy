@@ -20,7 +20,7 @@ public class SignUpPresenterImp implements SignUpPresenter, OnFinishedRegisterLi
     }
 
     @Override
-    public void register(String name, String mail, String mobile, String password1, String password2, int year) {
+    public void register(String name, String mail, String mobile, String password1, String password2, int year, int type) {
         if (registerView != null) {
             if (name.isEmpty()) {
                 registerView.setNameError("الإسم مطلوب");
@@ -40,7 +40,7 @@ public class SignUpPresenterImp implements SignUpPresenter, OnFinishedRegisterLi
                 registerView.setPasswordError("برجاء تأكيد كلمة المرور");
             } else {
                 registerView.showProgress();
-                interactor.register(name, mail, mobile, password1, year, this);
+                interactor.register(name, mail, mobile, password1, year, type, this);
             }
         }
     }

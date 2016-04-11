@@ -7,7 +7,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="10dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
@@ -45,7 +45,9 @@
         android:text="يمكنك الإن تنزيل شيت الإقتصاد أو شرائه من مكنبة موجه حيث انه يحتوى على العديد من النصائح قبل الإمتحان."
         android:id="@+id/news_content"
         android:layout_gravity="right"
-        android:textSize="16sp"
+        android:lineSpacingExtra="-6dp"
+        android:textSize="14sp"
+        android:textDirection="rtl"
         android:paddingRight="14dp"
         android:paddingLeft="16dp" />
 

@@ -88,6 +88,9 @@ public class MainInteractorImp implements MainInteractor {
 
                         complexPreferences.putObject(Constants.USER_PREF_KEY, user);
                         complexPreferences.commit();
+
+                        currentUser = complexPreferences.getObject(Constants.USER_PREF_KEY, UserVm.class);
+
                         listener.onUpdateSuccess();
                     } else {
                         listener.onFail();

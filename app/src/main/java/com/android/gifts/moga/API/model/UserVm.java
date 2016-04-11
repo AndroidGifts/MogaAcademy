@@ -23,6 +23,9 @@ public class UserVm {
     @SerializedName("YearId")
     @Expose
     private long YearId;
+    @SerializedName("TypeId")
+    @Expose
+    private long TypeId;
     @SerializedName("CreatedAt")
     @Expose
     private String CreatedAt;
@@ -34,23 +37,14 @@ public class UserVm {
     public UserVm() {
     }
 
-    /**
-     * 
-     * @param Name
-     * @param Email
-     * @param YearId
-     * @param Password
-     * @param Mobile
-     * @param Id
-     * @param CreatedAt
-     */
-    public UserVm(long Id, String Name, String Email, String Mobile, String Password, long YearId, String CreatedAt) {
+    public UserVm(long Id, String Name, String Email, String Mobile, String Password, long YearId, long TypeId, String CreatedAt) {
         this.Id = Id;
         this.Name = Name;
         this.Email = Email;
         this.Mobile = Mobile;
         this.Password = Password;
         this.YearId = YearId;
+        this.TypeId = TypeId;
         this.CreatedAt = CreatedAt;
     }
 
@@ -180,4 +174,11 @@ public class UserVm {
         this.CreatedAt = CreatedAt;
     }
 
+    public long getTypeId() {
+        return TypeId;
+    }
+
+    public void setTypeId(long typeId) {
+        TypeId = typeId;
+    }
 }

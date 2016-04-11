@@ -21,13 +21,10 @@ public class MainPresenterImp implements MainPresenter, OnFinishedMainListener {
 
     private ContactFragmentView contactFragmentView;
 
-    private UserVm currentUser;
-
     private int pageIndex = 0;
 
     public MainPresenterImp(Context context) {
         interactor = new MainInteractorImp(context);
-        currentUser = interactor.getUser();
     }
 
     public MainPresenterImp(NewsFragmentView newsFragmentView, Context context) {
@@ -47,23 +44,25 @@ public class MainPresenterImp implements MainPresenter, OnFinishedMainListener {
 
     @Override
     public long getUserYear() {
-        return currentUser.getYearId();
+        return interactor.getUser().getYearId();
     }
 
     @Override
     public UserVm getUser() {
-        return currentUser;
+        return interactor.getUser();
     }
 
     @Override
-    public void updateUser(String name, int year) {
+    public void updateUser(String name, int year, int type) {
+        UserVm currentUser = interactor.getUser();
+
         if (settingsFragmentView != null) {
             if (name.isEmpty()) {
                 settingsFragmentView.showNameError("الإسم مطلوب");
             } else {
                 settingsFragmentView.showProgress();
                 interactor.updateUser(new UserVm(currentUser.getId(), name, currentUser.getEmail(), currentUser.getMobile(),
-                        currentUser.getPassword(), year, currentUser.getCreatedAt()), this);
+                        currentUser.getPassword(), year, type, currentUser.getCreatedAt()), this);
             }
         }
     }

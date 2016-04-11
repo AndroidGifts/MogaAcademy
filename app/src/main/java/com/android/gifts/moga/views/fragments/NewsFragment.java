@@ -142,8 +142,6 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
     @Override
     public void initializeSchedules(List<Schedule> schedules) {
         for (int i = 0; i < 3; i++) {
-            Log.e("MYLOG", "GOT SCHEDULE NUM: " + i + ", URL" + schedules.get(i).getImageUrl());
-
             int scheduleType = (int) schedules.get(i).getScheduleType();
 
             switch (scheduleType) {

@@ -9,7 +9,7 @@ public interface MainPresenter {
     void getSchedules(int yearId, int typeId);
     UserVm getUser();
 
-    void updateUser(String name, int year);
+    void updateUser(String name, int year, int type);
 
     void sendContactMsg(String message);
 

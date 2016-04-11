@@ -26,6 +26,7 @@
                 android:text="@string/launcher_name"
                 android:layout_marginRight="16dp"
                 android:textColor="#fff"
+                style="@style/AppTheme.Widget.TextView"
                 android:textSize="20sp"
                 android:layout_gravity="right"
                 android:id="@+id/toolbar_title" />

@@ -19,6 +19,10 @@ public interface MogaApiInterface {
     @POST("/service/api/Users/LogIn")
     Call<LoginRegisterResponse> loginUser(@Query("login") String login, @Query("password") String password);
 
+    @POST("/service/api/Users/UpdateUser")
+    @Headers({"Content-Type:application/json"})
+    Call<Result> updateUser(@Body UserVm user);
+
     @POST("/service/api/Users/Register")
     @Headers({"Content-Type:application/json"})
     Call<LoginRegisterResponse> signUpUser(@Body HashMap<String, Object> body);
@@ -29,10 +33,6 @@ public interface MogaApiInterface {
 
     @GET("/service/api/News/GetSchedules")
     Call<SchedulesResponse> getSchedules(@Query("yearId") int yearId, @Query("typeId") int typeID);
-
-    @POST("/service/api/Users/UpdateUser")
-    @Headers({"Content-Type:application/json"})
-    Call<Result> updateUser(@Body UserVm user);
 
     @POST("/service/api/Users/ForgetPassword")
     @Headers({"Content-Type:application/json"})
