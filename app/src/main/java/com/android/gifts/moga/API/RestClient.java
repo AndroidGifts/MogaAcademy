@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestClient {
     private static MogaApiInterface apiInterface;
-    private static String baseURL = "http://mogaoperation-001-site1.btempurl.com";
+    private static String baseURL = "http://mogaoperation-002-site1.gtempurl.com";
 
     public static MogaApiInterface getClient() {
         if (apiInterface == null) {
