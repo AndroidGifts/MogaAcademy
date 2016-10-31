@@ -131,9 +131,9 @@ public class MainInteractorImp implements MainInteractor {
 
     @Override
     public void getSchedules(final int yearId, final int typeId, final OnFinishedMainListener listener) {
-        SchedulesResponse cachedResponse = complexPreferences.getObject(Constants.SCHEDULES + yearId + typeId, SchedulesResponse.class);
+        //SchedulesResponse cachedResponse = complexPreferences.getObject(Constants.SCHEDULES + yearId + typeId, SchedulesResponse.class);
 
-        if (cachedResponse != null) {
+        /*if (cachedResponse != null) {
             listener.onSchedulesSuccess(cachedResponse.getSchedules());
         } else {
             Call<SchedulesResponse> call = service.getSchedules(yearId, typeId);
@@ -166,7 +166,7 @@ public class MainInteractorImp implements MainInteractor {
                     listener.onFail();
                 }
             });
-        }
+        }*/
     }
 
     @Override

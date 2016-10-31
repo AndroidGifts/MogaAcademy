@@ -3,18 +3,18 @@
     package="com.android.gifts.moga">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- START Added for GCM -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <permission
         android:name="com.android.gifts.moga.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.android.gifts.moga.permission.C2D_MESSAGE" />
-    <!-- END Added for GCM -->
 
+    <!-- END Added for GCM -->
     <application
         android:name=".helpers.prefs.ObjectPreference"
         android:allowBackup="true"
@@ -28,6 +28,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.android.gifts.moga" />
             </intent-filter>
         </receiver>
@@ -39,7 +40,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
             android:name=".gcm.GcmIntentService"
             android:exported="false">
@@ -62,8 +62,8 @@
         <activity
             android:name=".views.activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
             android:parentActivityName=".views.activities.LauncherActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -72,8 +72,8 @@
         <activity
             android:name=".views.activities.SignUpActivity"
             android:label="@string/title_activity_sign_up"
-            android:screenOrientation="portrait"
             android:parentActivityName=".views.activities.LauncherActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -83,11 +83,20 @@
             android:name=".views.activities.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".views.activities.ScheduleActivity"
+            android:name=".schedules.SingleScheduleActivity"
             android:label="@string/title_activity_schedule"
+            android:parentActivityName=".schedules.ScheduleListActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.gifts.moga.views.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".schedules.ScheduleListActivity"
+            android:label="@string/title_activity_schedule_list"
             android:parentActivityName=".views.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

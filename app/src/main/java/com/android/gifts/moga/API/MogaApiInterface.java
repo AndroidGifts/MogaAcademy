@@ -32,7 +32,8 @@ public interface MogaApiInterface {
                                @Query("yearId") int yearId, @Query("typeId") int typeID);
 
     @GET("/service/api/News/GetSchedules")
-    Call<SchedulesResponse> getSchedules(@Query("yearId") int yearId, @Query("typeId") int typeID);
+    Call<SchedulesResponse> getSchedules(@Query("yearId") int yearId, @Query("typeId") int typeID,
+                                         @Query("ScheduleType") int scheduleType);
 
     @POST("/service/api/Users/ForgetPassword")
     @Headers({"Content-Type:application/json"})

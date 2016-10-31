@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.android.gifts.moga.API.model.Schedule;
 import com.android.gifts.moga.R;
 import com.android.gifts.moga.presenter.main.MainPresenter;
 import com.android.gifts.moga.presenter.main.MainPresenterImp;
-import com.android.gifts.moga.views.activities.ScheduleActivity;
+import com.android.gifts.moga.schedules.ScheduleListActivity;
 import com.android.gifts.moga.views.adapters.endlessRecycler.EndlessRecyclerViewNewsAdapter;
 import com.android.gifts.moga.views.adapters.endlessRecycler.OnLoadMoreListener;
 
@@ -26,8 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NewsFragment extends Fragment implements NewsFragmentView{
-    private RecyclerView recyclerView;
+public class NewsFragment extends Fragment implements NewsFragmentView {
 
     //private NewsRecyclerViewAdapter recyclerViewAdapter;
     private EndlessRecyclerViewNewsAdapter endlessNewsAdapter;
@@ -40,9 +38,8 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
     private View rootView;
 
     private MainPresenter presenter;
-    @Bind(R.id.fragment_progress_bar) ProgressBar progressBar;
-
-    private String scheduleType1, scheduleType2, scheduleType3;
+    @Bind(R.id.fragment_progress_bar)
+    ProgressBar progressBar;
 
     public NewsFragment() {
 
@@ -70,9 +67,11 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
 
         presenter = new MainPresenterImp(this, getContext());
         presenter.getNews(pageIndex, 10, yearId, typeId);
-        presenter.getSchedules(yearId, typeId);
+        //presenter.getSchedules(yearId, typeId);
 
-        intent = new Intent(getActivity(), ScheduleActivity.class);
+        intent = new Intent(getActivity(), ScheduleListActivity.class);
+        intent.putExtra("yearId", yearId);
+        intent.putExtra("typeId", typeId);
 
         // Inflate the layout for this fragment
         return rootView;
@@ -80,22 +79,25 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
 
     @OnClick(R.id.left_layout)
     public void openLeftSchedule() {
-        intent.putExtra("title", "جدول الملازم");
-        intent.putExtra("scheduleURL", scheduleType2);
+        intent.putExtra("title", "جداول الملازم");
+        intent.putExtra("ScheduleType", 2);
+
         startActivity(intent);
     }
 
     @OnClick(R.id.center_layout)
     public void openCenterSchedule() {
         intent.putExtra("title", "مواعيد الشرح");
-        intent.putExtra("scheduleURL", scheduleType3);
+        intent.putExtra("ScheduleType", 3);
+
         startActivity(intent);
     }
 
     @OnClick(R.id.right_layout)
     public void openRightSchedule() {
-        intent.putExtra("title", "جدول المحاضرات و السكاشن");
-        intent.putExtra("scheduleURL", scheduleType1);
+        intent.putExtra("title", "جداول المحاضرات و السكاشن");
+        intent.putExtra("ScheduleType", 1);
+
         startActivity(intent);
     }
 
@@ -104,7 +106,7 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
         news = firstNews;
 
         // Instantiate RecyclerView
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.news_recyclerview);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.news_recyclerview);
 
         // Instantiate LayoutManager
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -141,21 +143,7 @@ public class NewsFragment extends Fragment implements NewsFragmentView{
 
     @Override
     public void initializeSchedules(List<Schedule> schedules) {
-        for (int i = 0; i < 3; i++) {
-            int scheduleType = (int) schedules.get(i).getScheduleType();
-
-            switch (scheduleType) {
-                case 1:
-                    scheduleType1 = schedules.get(i).getImageUrl();
-                    break;
-                case 2:
-                    scheduleType2 = schedules.get(i).getImageUrl();
-                    break;
-                case 3:
-                    scheduleType3 = schedules.get(i).getImageUrl();
-                    break;
-            }
-        }
+        // old function
     }
 
     @Override

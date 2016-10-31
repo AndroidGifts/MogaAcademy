@@ -1,4 +1,4 @@
-package com.android.gifts.moga.views.activities;
+package com.android.gifts.moga.schedules;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,7 +23,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import uk.co.senab.photoview.PhotoView;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class SingleScheduleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class ScheduleActivity extends AppCompatActivity {
         PhotoView photoView = (PhotoView) findViewById(R.id.schedule_photo);
 
         Intent intent = getIntent();
-        String activityTitle = intent.getStringExtra("title");
+        //String activityTitle = intent.getStringExtra("title");
         String scheduleURL = intent.getStringExtra("scheduleURL");
 
         Log.e("MYLOG", "scheduleURL: " + scheduleURL);
@@ -64,14 +66,25 @@ public class ScheduleActivity extends AppCompatActivity {
 
                     }
                 });
-
-        TextView thisTitle = (TextView) findViewById(R.id.toolbar_title);
-        assert thisTitle != null;
-        thisTitle.setText(activityTitle);
     }
 
     @Override
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(context));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
     }
 }
